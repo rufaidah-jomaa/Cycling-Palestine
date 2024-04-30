@@ -14,20 +14,9 @@ import postRouter from './src/modules/post/post.router.js'
 import { globalErrorHandling } from "./src/services/errorHandling.js";
 
 export const initApp = (app,express)=>{
-    connectDB;
-    var whitelist = ['http://example1.com', 'http://example2.com']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-app.use(cors(corsOptions))
+     connectDB();
+    app.use(cors())
     app.use(express.json()); //
-  connectDB();
     app.use('/auth',authRouter)
     app.use('/user',userRouter)
     app.use('/notification',notificationRouter)
