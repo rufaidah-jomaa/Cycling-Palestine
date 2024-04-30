@@ -23,14 +23,11 @@ export const signup= async(req,res)=>{
 
     const token = await jwt.sign({email},process.env.confirmEmailSIG,{expiresIn:60*60})
     const refreshToken = jwt.sign({email},process.env.confirmEmailSIG,{expiresIn:60*60*24*7})
-     const html = //بدها تزبيط
-     `<div>
-     <h2> Hello ${userName}</h2>
-     <div> 
-         <a href='http://localhost:3000/auth/confirmEmail/${token}'>confirm your email</a> 
-        <a href='#'>resend confirm Email</a>  
-     </div>
-     </div>`;
+    const html =
+    `<h2> Hello ${userName}</h2>
+        <a href='${req.protocol}://${req.headers.host}/auth/confirmEmail/${token}'>confirm your email</a> 
+        <a href ='${req.protocol}://${req.headers.host}/auth/newconfirmEmail/${refreshToken}'>resend confirm Email</a> 
+    `;
      await sendEmail(email,"Welcome To Cycling Palestine " , html)
     return res.status(201).json({message:"success",newUser})
 }
@@ -44,12 +41,15 @@ if(user.modifiedCount>0){
 return res.json("Error while confirming your Email, please try again")
 }
 
-export const login= async(req,res)=>{ //ضايل فاليديشن و قصة التوكن 
+export const login= async(req,res)=>{
     const {email,password}=req.body;
 
     const user = await userModel.findOne({email})
     if(!user){
         return res.json("user not found")
+    }
+    if(!user.confirmEmail){
+        return res.json("pleaze confirm your Email")
     }
     const match = await bcrypt.compare(password,user.password) 
     if(!match){

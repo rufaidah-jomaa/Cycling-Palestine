@@ -2,7 +2,7 @@ import joi from "joi";
 
 const dataMethods =['body', 'query', 'params','headers'];
 export const generalValidation={
-    email: joi.string().min(5).max(20).email().required(),
+    email: joi.string().min(5).email().required(),
     password: joi.string().min(8).max(20).required()
 }
 const validation = (schema) => {

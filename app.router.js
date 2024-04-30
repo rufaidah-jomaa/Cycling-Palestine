@@ -11,23 +11,16 @@ import productRouter from './src/modules/product/product.router.js'
 import storeRouter from './src/modules/store/store.router.js'
 import trackRouter from './src/modules/track/track.router.js'
 import postRouter from './src/modules/post/post.router.js'
+import categoryRouter from './src/modules/category/category.router.js'
 import { globalErrorHandling } from "./src/services/errorHandling.js";
 
 export const initApp = (app,express)=>{
-    connectDB;
-    var whitelist = ['http://example1.com', 'http://example2.com']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-app.use(cors(corsOptions))
-    app.use(express.json()); //
-  connectDB();
+     connectDB();
+     app.use(cors())
+     app.use(express.json()); //
+      app.get("/", (req, res) => {
+      return res.status(200).json("welcome");
+      });
     app.use('/auth',authRouter)
     app.use('/user',userRouter)
     app.use('/notification',notificationRouter)
@@ -38,6 +31,7 @@ app.use(cors(corsOptions))
     app.use('/store',storeRouter)
     app.use('/track',trackRouter)
     app.use('/post',postRouter)
+    app.use('/category',categoryRouter)
     app.use("*",(req,res)=>{
         return res.json("Page Not Found")
     })
