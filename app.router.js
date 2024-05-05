@@ -28,8 +28,6 @@ export const initApp = (app,express)=>{
       app.get("/", (req, res) => {
     return res.status(200).json("welcome");
   });
-
-
     app.use('/auth',authRouter)
     app.use('/user',userRouter)
     app.use('/notification',notificationRouter)

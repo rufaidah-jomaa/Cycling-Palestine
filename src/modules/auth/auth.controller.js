@@ -14,14 +14,14 @@ export const signup= async(req,res)=>{
     if(user){
         return res.json('email is already existing')
     }
-    const hashedPassword = await bcrypt.hash(password,parseInt(process.env.SALT_ROUND))
+    const hashedPassword =  bcrypt.hashSync(password,parseInt(process.env.SALT_ROUND))
 
     const newUser = await userModel.create({userName,email,password:hashedPassword})
     if(!newUser){
         return res.json('error while creating user')
     }
 
-    const token = await jwt.sign({email},process.env.confirmEmailSIG,{expiresIn:60*60})
+    const token =  jwt.sign({email},process.env.confirmEmailSIG,{expiresIn:60*60})
     const refreshToken = jwt.sign({email},process.env.confirmEmailSIG,{expiresIn:60*60*24*7})
     const html =
     `<h2> Hello ${userName}</h2>
@@ -51,10 +51,13 @@ export const login= async(req,res)=>{
     if(!user.confirmEmail){
         return res.json("pleaze confirm your Email")
     }
-    const match = await bcrypt.compare(password,user.password) 
+    const match =  bcrypt.compareSync(password,user.password) 
     if(!match){
         return res.json("password in not correct")
     }
-    const token = await jwt.sign({id:user._id},process.env.LOGINSIG)
-    return res.json({message:"success",token})
+    if (user.status == "Blocked"){
+        return res.status(403).json({message:"Your account is blocked!"})
+       }
+       const token = jwt.sign({id:user._id,role:user.role},process.env.LOGINSIG)
+       return res.status(200).json({message:"success",token})
 }

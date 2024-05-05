@@ -6,8 +6,8 @@ import uploadFile, { fileType } from "../../services/multer.js";
 const router = Router();
 
 router.get('/',controller.getuser)
-router.get('/getProfile',asyncHandler(auth),asyncHandler(controller.getProfile))
-router.patch('/uploadPic',auth,uploadFile(fileType.image).single('image'),asyncHandler(controller.uploadPic))
+router.get('/getProfile',auth(),asyncHandler(controller.getProfile))
+router.patch('/uploadPic',auth(),uploadFile(fileType.image).single('image'),asyncHandler(controller.uploadPic))
 
 export default router;
  
