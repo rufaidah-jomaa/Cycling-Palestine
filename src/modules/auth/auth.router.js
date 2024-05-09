@@ -8,7 +8,9 @@ const router=Router();
 router.get('/',controller.getauth)
 
 router.post('/signup',validation(signupSchema),asyncHandler(controller.signup))
-router.post('/login',validation(signinSchema),asyncHandler(controller.login))
+router.post('/login',validation(signinSchema),asyncHandler(controller.signin))
 router.get('/confirmEmail/:token',asyncHandler(controller.confirmEmail))
+router.patch('/sendCode',asyncHandler(controller.sendCode))
+router.patch('/forgotPassword',asyncHandler(controller.forgotPassword))
 
 export default router;

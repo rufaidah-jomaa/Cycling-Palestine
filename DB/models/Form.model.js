@@ -1,6 +1,11 @@
 
 import {mongoose,Schema,model, Types} from 'mongoose'
-const participatingSchema = new Schema({
+const formSchema = new Schema({
+    approval:{
+        type:String,
+        enum:['اوافق','لا اوافق'],
+        required:true
+    },
    user_id:{
         type:Types.ObjectId,
         ref:"User",
@@ -13,7 +18,7 @@ const participatingSchema = new Schema({
     },
    isPaid:{
         type:Boolean,
-        required:true
+        required:true,
     }
     
     },{
