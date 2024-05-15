@@ -12,10 +12,17 @@ const commentSchema = new Schema({
         ref:"User",
         required:true
     },
+    userName:{
+       type:String,
+        required:true  
+    },
     post_id:{
         type:Types.ObjectId,
-        ref:"Post",
-        required:true
+        ref:"Post",  
+    },
+    track_id:{
+        type:Types.ObjectId,
+        ref:"Track",
     }
     
     },{

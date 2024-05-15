@@ -1,10 +1,8 @@
-export const roles ={
-    Admin : 'Admin',
-    User: 'User'
-}
+import { roles } from "../../middleware/auth.middleware.js"
+
 export const endPoints ={
-    create : roles.Admin,
-    getAll : roles.Admin,
-    update: roles.Admin,
-    destroy:roles.Admin
+    create : [roles.Admin],
+    getAll : [roles.Admin],
+    update: [roles.Admin],
+    destroy:[roles.Admin]
 }

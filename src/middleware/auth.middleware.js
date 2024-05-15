@@ -1,5 +1,9 @@
 import jwt from 'jsonwebtoken'
 import userModel from '../../DB/models/User.model.js';
+export const roles ={
+    Admin : 'Admin',
+    User: 'User'
+}
 
 export const auth = ( accessRole = [])=>{  //لسا ما عملت كيف المستخدم يصير ادمن داينمك
     return async(req,res,next)=>{
@@ -13,7 +17,7 @@ export const auth = ( accessRole = [])=>{  //لسا ما عملت كيف الم�
         return res.status(400).json({message:"invalid token"})
     }
     
-    const user = await userModel.findById(decoded.id).select('userName role')
+    const user = await userModel.findById(decoded.id).select('userName role birthdate')
     if(!user){
         return  res.status(404).json({message:"user not found"})
     }

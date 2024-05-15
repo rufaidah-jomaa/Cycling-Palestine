@@ -8,7 +8,6 @@ import orderRouter from './src/modules/order/order.router.js'
 import participatingRouter from './src/modules/participating/participating.router.js'
 import paymentRouter from './src/modules/payment/payment.router.js'
 import productRouter from './src/modules/product/product.router.js'
-import storeRouter from './src/modules/store/store.router.js'
 import trackRouter from './src/modules/track/track.router.js'
 import postRouter from './src/modules/post/post.router.js'
 import categoryRouter from './src/modules/category/category.router.js'
@@ -35,7 +34,6 @@ export const initApp = (app,express)=>{
     app.use('/participating',participatingRouter)
     app.use('/payment',paymentRouter)
     app.use('/product',productRouter)
-    app.use('/store',storeRouter)
     app.use('/track',trackRouter)
     app.use('/post',postRouter)
     app.use('/category',categoryRouter)

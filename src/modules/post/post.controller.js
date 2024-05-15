@@ -14,7 +14,7 @@ export const getPosts=async(req,res,next)=>{
          },
          {
             path: 'comments',
-            select:'text'
+            select:'text userName'
          }
      ])
      return res.json({message:"success",posts})
@@ -48,7 +48,7 @@ export const likePost = async (req,res,next)=>{
 }
 
 export const createComment = async(req,res,next)=>{
-   
+    req.body.userName=req.user.userName
     req.body.user_id=req.user._id;
     req.body.post_id=req.params.id
     if(req.file){

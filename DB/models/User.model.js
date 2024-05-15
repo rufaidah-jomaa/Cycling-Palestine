@@ -18,6 +18,10 @@ const userSchema = new Schema(
       type: String,
       enum: ["male", "female"],
     },
+   
+    birthdate: {
+      type: Date,
+    },
     confirmEmail: {
       type: Boolean,
       default: false,
@@ -30,6 +34,7 @@ const userSchema = new Schema(
     },
     Address: {
       type: String,
+      
     },
     status: {
       type: String,
@@ -44,7 +49,7 @@ const userSchema = new Schema(
     sendCode:{
       type:String,
       default:null
-    }
+    },
   },
   { timestamps: true }
 );

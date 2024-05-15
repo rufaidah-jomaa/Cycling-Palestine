@@ -15,3 +15,24 @@ export const uploadPic= async(req,res,next)=>{
     const user = await userModel.findByIdAndUpdate(req.user._id,{profilePic:secure_url},{new:true} )
     return res.json({message:"success",user})
 }
+
+export const updateProfile=async(req,res)=>{
+    const user = await userModel.findById(req.params.id)
+    if(!user){
+        return res.status(404).json({message:"user not found"})
+    }
+    user.userName=req.body.userName
+    user.gender=req.body.gender
+    user.birthdate=req.body.birthdate
+    user.phone=req.body.phone
+    user.Address=req.body.Address
+    if(req.file){
+        const {secure_url,public_id} = await cloudinary.uploader.upload(req.file.path,
+            {folder: `${process.env.App_Name}/users`})
+          //  await cloudinary.uploader.destroy(user.image.public_id)
+            user.image = {secure_url,public_id}
+
+    }
+         await user.save()
+    return res.json({message:"success",user})
+}

@@ -24,11 +24,33 @@ const trackSchema = new Schema({
         type:String
     },
     number_of_participants:{
-        type:Number
+        type:Number,
+        default:0
+    },
+    like:[{
+           type:Types.ObjectId,
+           ref:"User"  
+        }],
+    description:{
+        type:String,
+        required:true
     }
-    
-    },{
-        timestamps:true
+}  ,   {
+     timestamps:true,
+     toJSON:{virtuals:true},
+     toObject:{virtuals:true}
     })
+
+    trackSchema.virtual('comments',{
+        localField:'_id',
+        foreignField:'track_id',
+        ref:'Comment'
+    })
+    trackSchema.virtual('participants',{
+        localField:'_id', // primary key column from this model(parent)
+        foreignField:'track_id', // foreign key column from second model(child)
+        ref:'Participating' // name of child model 
+    })
+
     const trackModel= model("Track",trackSchema);
     export default trackModel;
