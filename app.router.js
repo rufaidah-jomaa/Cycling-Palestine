@@ -11,6 +11,7 @@ import productRouter from './src/modules/product/product.router.js'
 import trackRouter from './src/modules/track/track.router.js'
 import postRouter from './src/modules/post/post.router.js'
 import categoryRouter from './src/modules/category/category.router.js'
+import cartRouter from './src/modules/cart/cart.router.js'
 import { globalErrorHandling } from "./src/services/errorHandling.js";
 
 export const initApp = (app,express)=>{
@@ -37,6 +38,7 @@ export const initApp = (app,express)=>{
     app.use('/track',trackRouter)
     app.use('/post',postRouter)
     app.use('/category',categoryRouter)
+    app.use('/cart',cartRouter)
     app.use("*",(req,res)=>{
         return res.json("Page Not Found")
     })
