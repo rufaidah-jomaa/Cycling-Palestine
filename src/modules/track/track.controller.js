@@ -45,17 +45,20 @@ export const getDetails = async (req,res)=>{
 export const getByDate = async(req,res,next)=>{
     const {date}=req.query;
     const tracks= await trackModel.find({
-        'date':  { $gt: date },
+        date: { $gte: new Date(date) },
     })
     return res.json({message:"success",tracks})
 }
 export const getByName = async(req,res,next)=>{
     const {name}=req.params;
    
-    const tracks= await trackModel.find({
+    const track= await trackModel.find({
         trackName: name,
     })
-    return res.json({message:"success",tracks})
+    if(!track){
+        return res.status(404).json({message:"track not found"})
+    }
+    return res.json({message:"success",track})
 }
 
 export const likeTrack = async (req,res,next)=>{
@@ -70,7 +73,7 @@ export const likeTrack = async (req,res,next)=>{
         {new:true}
     )
     if(!like){
-        return  next(new Error('Error in liking the Post'))
+        return  next(new Error('Error in liking the track'))
     }
     return res.json({message:"success",like})
 }
