@@ -8,9 +8,9 @@ const postSchema = new Schema({
         type:String,
         required:true
     },
-    image:{
+    images:[{
         type:Object
-    },
+    }],
     user_id:{
         type:Types.ObjectId,
         ref:"User",

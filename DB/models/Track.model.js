@@ -34,6 +34,9 @@ const trackSchema = new Schema({
     description:{
         type:String,
         required:true
+    },
+    maxParticipants:{
+        type:Number,
     }
 }  ,   {
      timestamps:true,

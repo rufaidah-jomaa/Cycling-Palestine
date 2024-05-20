@@ -33,6 +33,8 @@ export const creatProduct = async(req,res)=>{
     req.body.createdBy=req.user._id
     req.body.updatedBy=req.user._id
     const product= await productModel.create(req.body)
+    const notification = await notificModel.create({content:"قام المسؤول باضافة منتج جديد يمكنك شراءه الان!"})
+
     return res.status(201).json({message:"product added successfully!",product})
 }
 

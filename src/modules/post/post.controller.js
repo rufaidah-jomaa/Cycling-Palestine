@@ -27,6 +27,8 @@ export const createPost= async(req,res,next)=>{
     if(!post){
         return next(new Error("Couldn't create post"))
     }
+    const notification = await notificModel.create({content:"قام المسؤول باضافة منشور جديد يمكنك التفاعل معه الان!"})
+
     return res.json({message:"success",post})
 }
 
@@ -58,4 +60,25 @@ export const createComment = async(req,res,next)=>{
     }
     const comment = await commentModel.create(req.body)
     return res.json({message:"success",comment})
+}
+
+export const updatePost=async(req,res)=>{
+    const post = await postModel.findById(req.params.id)
+    if(!post){
+        return res.status(404).json({message:"success"})
+    }
+    post.title=req.body.title;
+    post.body=req.body.body;
+    if(req.body.file){
+        //بدها تكملة
+    }
+    post.save();
+    return res.status(201).json({message:"success",post})
+}
+export const deletePost=async(req,res)=>{
+    const deletedPost=await postModel.findByIdAndDelete(req.params.id)
+    if(!deleteTrack){
+        return res.status(404).json({message:"post not found"})
+    }
+    return res.status(201).json({message:"success",deletedPost})
 }

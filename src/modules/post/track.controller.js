@@ -1,5 +1,5 @@
 import commentModel from "../../../DB/models/Comment.model.js";
-import notificModel from "../../../DB/models/Notifications.model.js";
+import postModel from "../../../DB/models/Post.model.js";
 import trackModel from "../../../DB/models/Track.model.js";
 import cloudinary from "../../services/cloudinary.js";
 
@@ -10,14 +10,13 @@ export const addTrack= async(req,res,next)=>{
     if(!track){
         return next(new Error("Track not created"))
     }
-    const notification = await notificModel.create({content:"قام المسؤول باضافة رحلة جديدة يمكنك المشاركة بها الان!"})
     return res.json({message:"success",track})
 }
 
-export const updateTrack=async(req,res)=>{
-    const track = await trackModel.findById(req.params.id)
-    if(! track){
-     return res.status(404).json("track not found")
+export const updatePost=async(req,res)=>{
+    const post = await postModel.findById(req.params.id)
+    if(! post){
+     return res.status(404).json("post not found")
     }
    track.trackName=req.body.trackName;
    track.distance=req.body.distance;
@@ -28,7 +27,6 @@ export const updateTrack=async(req,res)=>{
    track.maxParticipants=req.body.maxParticipants;
    track.updatedBy=req.user._id;
    track.save()
-   const notification = await notificModel.create({content:"قام المسؤول باضافة بالتعديل على رحلة..اطلع عليها اذا كنت مهتم بذلك"})
     return res.json({message:"success",track})
 }
 export const getTracks= async (req,res,next)=>{
@@ -116,7 +114,5 @@ export const deleteTrack=async(req,res)=>{
     if(!deleteTrack){
         return res.status(404).json({message:"track not found"})
     }
-    const notification = await notificModel.create({content:"قام المسؤول بالغاء رحلة..تاكد من ذلك!"})
-
     return res.status(201).json({message:"success",deletedTrack})
 }
