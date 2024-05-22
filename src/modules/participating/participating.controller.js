@@ -38,8 +38,9 @@ export const participate= async(req,res)=>{
     })
     
     const updateNum= await trackModel.findOneAndUpdate({_id:t_id}, { $inc : {number_of_participants:1}},{new:true}) //update #of participants
-    const html='Welcome to our journey, We wish you the greatest amount of enjoyment and benefit!'
-    sendEmail(req.user.email,'We happy to share track with you!',html)
+    const html=
+    `<h2>'أهلاً بك في رحلة جديدة على البسكليت.. سعيدون لمشاركتنا معك رحلة مليئة بالمغامرات و المعلومات الجديدة.. نتمنى لك القدر الاكبر من الافادة و المتعة!'</h2>`
+    sendEmail(req.user.email,'أهلا بك برحلة جديدة في بلادنا!',html)
     return res.status(200).json({message:"succuess",participate})
     
 }

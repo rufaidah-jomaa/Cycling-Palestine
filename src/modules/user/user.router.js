@@ -6,9 +6,10 @@ import uploadFile, { fileType } from "../../services/multer.js";
 import { endPoints } from "./user.roles.js";
 const router = Router();
 
-router.get('/',controller.getuser)
+router.get('/getAll',asyncHandler(controller.getUsers))
 router.get('/getProfile',auth(endPoints.getProfile),asyncHandler(controller.getProfile))
 router.patch('/uploadPic',auth(endPoints.uploadPic),uploadFile(fileType.image).single('image'),asyncHandler(controller.uploadPic))
+router.delete('/deleteImage',auth(endPoints.deleteImage),asyncHandler(controller.deletImage))
 router.patch('/updateProfile/:id',auth(endPoints.updateProfile),uploadFile(fileType.image).single('image'),asyncHandler(controller.updateProfile))
 router.delete('/deleteAccount/:id',auth(endPoints.deletAccount),asyncHandler(controller.deleteAccount))
 router.patch('/blockUser/:id',auth(endPoints.blockUser),asyncHandler(controller.blockUser))

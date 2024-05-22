@@ -14,6 +14,8 @@ import categoryRouter from './src/modules/category/category.router.js'
 import cartRouter from './src/modules/cart/cart.router.js'
 import couponRouter from './src/modules/coupon/coupon.router.js'
 import { globalErrorHandling } from "./src/services/errorHandling.js";
+import session from 'express-session'
+import  passport from 'passport'
 
 export const initApp = (app,express)=>{
      connectDB();
@@ -41,6 +43,7 @@ export const initApp = (app,express)=>{
     app.use('/category',categoryRouter)
     app.use('/cart',cartRouter)
     app.use('/coupon',couponRouter)
+  
     app.use("*",(req,res)=>{
         return res.json("Page Not Found")
     })
