@@ -16,7 +16,7 @@ export const create=async(req,res)=>{
         if(!coupon){
             return res.status(404).json({message:"coupon not found!"})
         }
-        if(coupon.expiredDate<new Date()){
+        if(coupon.expiredDate < new Date()){
             return res.status(404).json({message:"coupon expired!"})
         }
        if(coupon.usedBy.includes(req.user._id)){

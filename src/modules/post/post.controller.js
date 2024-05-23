@@ -1,4 +1,5 @@
 import commentModel from "../../../DB/models/Comment.model.js";
+import notificModel from "../../../DB/models/Notifications.model.js";
 import postModel from "../../../DB/models/Post.model.js";
 import cloudinary from "../../services/cloudinary.js";
 
@@ -22,8 +23,14 @@ export const getPosts=async(req,res,next)=>{
 
 export const createPost= async(req,res,next)=>{
     const {title,body}=req.body;
-    const {secure_url,public_id}=await cloudinary.uploader.upload(req.file.path, {folder: `${process.env.App_Name}/post`});
-    const post = await postModel.create({title,body,image:{secure_url,public_id},user_id:req.user._id})
+    req.body.images=[] 
+    for (const file of req.files.images) { // file: iteration
+        const {secure_url,public_id} = await cloudinary.uploader.upload(file.path,
+            {folder:`${process.env.App_Name}/posts/${title}`})
+            req.body.images.push({secure_url,public_id})
+    }
+    req.body.user_id=req.user._id
+    const post = await postModel.create(req.body)
     if(!post){
         return next(new Error("Couldn't create post"))
     }
@@ -35,6 +42,10 @@ export const createPost= async(req,res,next)=>{
 export const likePost = async (req,res,next)=>{
     const user_id=req.user._id;
     const {id}=req.params; //postID
+    const post = await postModel.findById(id)
+    if(!post){
+        return res.status(404).json({message:"post not found"})
+    }
     const like = await postModel.findByIdAndUpdate({_id:id},
         {
             $addToSet:{
@@ -53,6 +64,10 @@ export const createComment = async(req,res,next)=>{
     req.body.userName=req.user.userName
     req.body.user_id=req.user._id;
     req.body.post_id=req.params.id
+    const post = await postModel.findById(req.params.id)
+    if(!post){
+        return res.status(404).json({message:"post not found"})
+    }
     if(req.file){
        const {secure_url,public_id}= await cloudinary.uploader.upload(req.file.path,
         {folder:`${process.env.App_Name}/comments/${req.body.post_id}`})
@@ -69,16 +84,37 @@ export const updatePost=async(req,res)=>{
     }
     post.title=req.body.title;
     post.body=req.body.body;
-    if(req.body.file){
-        //بدها تكملة
+    if(req.file){
+       //
     }
     post.save();
     return res.status(201).json({message:"success",post})
 }
 export const deletePost=async(req,res)=>{
     const deletedPost=await postModel.findByIdAndDelete(req.params.id)
-    if(!deleteTrack){
+    if(!deletedPost){
         return res.status(404).json({message:"post not found"})
     }
+    async function deleteImages () {
+        for (const element of deletedPost.images) {
+            await cloudinary.uploader.destroy(element.public_id)    
+        }
+      }
+      deleteImages()
     return res.status(201).json({message:"success",deletedPost})
+}
+
+export const deleteComment=async(req,res)=>{ //for post and track the same link
+    
+    const comment = await commentModel.findById(req.params.id)
+    if(!comment){
+        return res.status(404).json({message:"comment not found"})
+    }
+    if( req.user._id == comment.user_id ){
+
+            await commentModel.findByIdAndDelete(req.params.id)
+        }
+   
+    await cloudinary.uploader.destroy(comment.image.public_id)
+    return res.status(200).json({message:"comment deleted successfully",comment})
 }

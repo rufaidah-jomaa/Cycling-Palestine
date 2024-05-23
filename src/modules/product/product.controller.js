@@ -66,7 +66,7 @@ export const getDetails = async (req,res)=>{
     return res.status(200).json({message:"success",product})
 }
 
-export const update = async(req,res)=>{
+export const update = async(req,res)=>{ //بدها تعديلللللل
     //return res.json(typeof(parseInt(req.body.price)))
     const product = await productModel.findById(req.params.id)//productId
     if(! product){

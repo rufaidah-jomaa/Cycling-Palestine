@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from  'jsonwebtoken'
 import sendEmail from '../../services/sendEmail.js'
 import {customAlphabet, nanoid} from 'nanoid'
-
+import { OAuth2Client } from 'google-auth-library'
 
 export const getauth=(req,res)=>{
     return res.json("hello from auth ")
@@ -28,8 +28,8 @@ export const signup= async(req,res)=>{
     
        const html= `
        <h2  direction: "rtl"> !${userName}مرحباً</h2>
-        <p>سعيدون جدا بانضمامك لعائلة فلسطين ع البسكليت
-         ! نتمنى لك رحلات مليئة بالافادة و المتعة </p>
+        <h3>سعيدون جدا بانضمامك لعائلة فلسطين ع البسكليت
+         ! نتمنى لك رحلات مليئة بالافادة و المتعة </h3>
         <a href='${req.protocol}://${req.headers.host}/auth/confirmEmail/${token}' style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #ffffff; background-color: #4CAF50; text-align: center; text-decoration: none; border-radius: 5px;">
        تأكيد الايميل</a> 
         <a href ='${req.protocol}://${req.headers.host}/auth/newconfirmEmail/${refreshToken}' style="display: inline-block; padding: 10px 20px; font-size: 16px; color: black; border: 2px solid black; text-align: center; text-decoration: none; border-radius: 5px;">اعادة تأكيد الايميل</a> 
@@ -38,8 +38,13 @@ export const signup= async(req,res)=>{
     return res.status(201).json({message:"success",newUser})
 }
 export const confirmEmail= async(req,res)=>{
-const {token} = req.params;
-const decoded = jwt.verify(token, process.env.confirmEmailSIG);
+  const {token} = req.params;
+
+   const decoded = jwt.verify(token, process.env.confirmEmailSIG);
+
+    if (error == 'TokenExpiredError') {
+        return res.json('Token is expired');
+    }
 if(!decoded){
     return res.json('invalid token')
 }
@@ -48,6 +53,7 @@ if(user.modifiedCount>0){
     return res.redirect(process.env.FEURL)
 }
 return res.json("Error while confirming your Email, please try again")
+
 }
 
 export const newconfirmEmail = async(req,res)=>{
@@ -111,4 +117,7 @@ export const forgotPassword = async(req,res) =>{
     return res.status(200).json({message:"success",user})
 }
 
+export const googlelogin= async(req,res)=>{
+    const {token}=req.body
+}
 
