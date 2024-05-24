@@ -8,11 +8,16 @@ export const getpartest=(req,res)=>{
 
 export const participate= async(req,res)=>{
     
+    if(req.user.status =='Blocked'){
+        return res.json({message:"You are blocked.. you cant participate this track"})
+    }
+
     const {t_id}=req.params;
     const track = await trackModel.findById(t_id);
     if(!track){
         return res.status(404).json({message:"track not found!"})
     }
+
     if(track.date<new Date()){
         return res.json({message:"this track is finished"})
     }

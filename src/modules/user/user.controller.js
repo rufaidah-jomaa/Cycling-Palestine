@@ -7,6 +7,9 @@ export const getUsers=async(req,res)=>{
 }
 
 export const getProfile= async(req,res,next)=>{
+    if(req.user.status == 'Blocked'){
+        return res.json({message:"you ara blocked"})
+    }
     const user= await userModel.findById(req.user._id)
     return res.json({message:"success",user})
 }

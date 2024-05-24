@@ -4,6 +4,9 @@ export const test=(req,res)=>{
     return res.json("Cart")
 }
 export const create=async(req,res)=>{
+    if(req.user.status =='Blocked'){
+        return res.json({message:"You are blocked.. you cant add products to cart"})
+    }
     const {productId} = req.body
    
     const cart = await cartModel.findOne({userId:req.user._id})

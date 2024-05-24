@@ -98,7 +98,9 @@ export const likeTrack = async (req,res,next)=>{
 }
 
 export const createComment = async(req,res,next)=>{
-
+    if(req.user.status =='Blocked'){
+        return res.json({message:"You are blocked.. you cant comment"})
+    }
      req.body.userName = req.user.userName
     req.body.user_id=req.user._id;
     req.body.track_id=req.params.id
