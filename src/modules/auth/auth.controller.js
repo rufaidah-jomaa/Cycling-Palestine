@@ -105,7 +105,7 @@ export const forgotPassword = async(req,res) =>{
     if(!user){
         return res.status(404).json({message:"user not found"})
     }
-    if(!user.sendCode==code){
+    if(user.sendCode != code){
         return res.status(400).json({message:"not matcing code"})
     }
     user.password= await bcrypt.hash(password,parseInt(process.env.SALT_ROUND))
