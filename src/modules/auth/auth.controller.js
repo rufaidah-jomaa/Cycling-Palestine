@@ -42,9 +42,6 @@ export const confirmEmail= async(req,res)=>{
 
    const decoded = jwt.verify(token, process.env.confirmEmailSIG);
 
-    if (error == 'TokenExpiredError') {
-        return res.json('Token is expired');
-    }
 if(!decoded){
     return res.json('invalid token')
 }
