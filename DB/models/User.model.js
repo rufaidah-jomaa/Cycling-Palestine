@@ -16,7 +16,7 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: ["ذكر", "انثى"],
+      enum: ["ذكر", "أنثى"],
     },
    
     birthdate: {
