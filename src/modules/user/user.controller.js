@@ -17,23 +17,27 @@ export const getProfile = async (req, res, next) => {
 };
 
 export const uploadPic = async (req, res, next) => {
-  const { secure_url, public_id } = await cloudinary.uploader.upload(
+  const { secure_url,public_id } = await cloudinary.uploader.upload(
     req.file.path,
     { folder: `${process.env.App_Name}/users` }
   );
   const user = await userModel.findByIdAndUpdate(
     { _id: req.user._id },
-    { image: secure_url, public_id },
+    { image: { secure_url,public_id }},
     { new: true }
   );
   return res.json({ message: "success", user });
 };
 
 export const deletImage = async (req, res) => {
+
+  const user = await userModel.findById(req.user._id)
+  await cloudinary.uploader.destroy(user.image.public_id)
   const deletedImage = await userModel.updateOne(
     { _id: req.user._id },
     { $unset: { image: "" } }
   );
+   
   if (deletedImage.modifiedCount === 1) {
     return res.json({ message: "success" });
   } else {

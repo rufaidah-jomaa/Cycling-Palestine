@@ -46,7 +46,7 @@ export const participate= async(req,res)=>{
     const html=
     `<h2>'أهلاً بك في رحلة جديدة على البسكليت.. سعيدون لمشاركتنا معك رحلة مليئة بالمغامرات و المعلومات الجديدة.. نتمنى لك القدر الاكبر من الافادة و المتعة!'</h2>`
     sendEmail(req.user.email,'أهلا بك برحلة جديدة في بلادنا!',html)
-    return res.status(200).json({message:"succuess",participate})
+    return res.status(200).json({message:"success",participate})
     
 }
 
