@@ -9,5 +9,6 @@ router.get('/',controller.getOrderTest)
 router.post('/create',auth(endPoints.create),asyncHandler(controller.create))
 router.get('/getAll',auth(endPoints.getOrders),asyncHandler(controller.getOrders))
 router.get('/myOrders',auth(endPoints.myOrders),asyncHandler(controller.getMyOrders))
+router.patch('/changeStatus/:orderId',auth(endPoints.changeStatus),asyncHandler(controller.changeStatus))
 
 export default router;

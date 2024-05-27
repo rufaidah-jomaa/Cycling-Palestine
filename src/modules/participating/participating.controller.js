@@ -48,6 +48,7 @@ export const participate= async(req,res)=>{
     sendEmail(req.user.email,'أهلا بك برحلة جديدة في بلادنا!',html)
     return res.status(200).json({message:"success",participate})
     
+    
 }
 
 export const cancel =async(req,res)=>{

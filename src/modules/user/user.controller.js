@@ -18,7 +18,7 @@ export const getProfile = async (req, res, next) => {
 
 export const uploadPic = async (req, res, next) => {
   const { secure_url,public_id } = await cloudinary.uploader.upload(
-    req.file.path,
+        req.file.path,
     { folder: `${process.env.App_Name}/users` }
   );
   const user = await userModel.findByIdAndUpdate(

@@ -89,11 +89,31 @@ export const create=async(req,res)=>{
 }
 
 export const getOrders=async(req,res)=>{
-    const orders = await orderModel.find({})
+    const orders = await orderModel.find({
+        $or:[{
+            status:'pending'
+        },
+        {
+            status:'confirmed'
+        }],
+     });
     return res.status(200).json({message:'success',orders})
 }
 
 export const getMyOrders= async(req,res)=>{
     const orders = await orderModel.find({userId:req.user._id})
     return res.status(200).json({message:'success',orders})
+}
+
+export const changeStatus = async(req,res)=>{
+    const {orderId}=req.params;
+    const {status}=req.body;
+
+    const order= await orderModel.findById(orderId)
+    if(!order){
+        return res.status(400).json({message:'order not found'})
+    }
+    order.status=status;
+    order.save();
+    return res.status(200).json({message:'success',order})
 }
