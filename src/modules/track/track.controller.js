@@ -34,7 +34,7 @@ export const updateTrack=async(req,res)=>{
 export const getTracks= async (req,res,next)=>{
     const tracks = await trackModel.find({}).populate({
         path:'participants',
-        select:'name'
+        select:'name user_id'
     })
     return res.json({message:"success",tracks})
 }
