@@ -28,7 +28,7 @@ export const updateTrack=async(req,res)=>{
    track.maxParticipants=req.body.maxParticipants;
    track.updatedBy=req.user._id;
    track.save()
-   const notification = await notificModel.create({content:"قام المسؤول باضافة بالتعديل على رحلة..اطلع عليها اذا كنت مهتم بذلك"})
+   const notification = await notificModel.create({content:` اطلع عليها اذا كنت مهتم بذلك${track.trackName}قام المسؤول بالتعديل على `})
     return res.json({message:"success",track})
 }
 export const getTracks= async (req,res,next)=>{
@@ -115,7 +115,7 @@ export const createComment = async(req,res,next)=>{
 
 export const deleteTrack=async(req,res)=>{
     const deletedTrack=await trackModel.findByIdAndDelete(req.params.id)
-    if(!deleteTrack){
+    if(!deletedTrack){
         return res.status(404).json({message:"track not found"})
     }
     const notification = await notificModel.create({content:"قام المسؤول بالغاء رحلة..تاكد من ذلك!"})
