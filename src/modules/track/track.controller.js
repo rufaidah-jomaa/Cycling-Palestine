@@ -52,7 +52,7 @@ export const getDetails = async (req,res)=>{
          },
          {
             path:'participants',
-            select:'name'
+            select:'name user_id'
          }
     ])
     if(!track){
