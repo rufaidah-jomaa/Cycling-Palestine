@@ -4,8 +4,12 @@ const postSchema = new Schema({
         type:String,
         required:true
     },
-    body:{
+    description:{
         type:String,
+        required:true
+    },
+    mainImage:{
+        type: Object,
         required:true
     },
     images:[{
