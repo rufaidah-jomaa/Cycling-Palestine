@@ -23,7 +23,15 @@ export const getPosts = async (req, res, next) => {
 
 export const getDetailes = async (req, res) => {
   const { id } = req.params;
-  const post = await postModel.findById(req.params.id);
+  const post = await postModel.findById(req.params.id).populate([
+    {
+      path: "like",
+      select: "userName",
+    },{
+    path: "comments",
+    select:'text userName'
+    },
+])
   return res.status(200).json({ message: "success", post });
 };
 
