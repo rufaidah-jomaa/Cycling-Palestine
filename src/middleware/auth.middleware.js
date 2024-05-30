@@ -17,7 +17,7 @@ export const auth = ( accessRole = [])=>{  //لسا ما عملت كيف الم�
         return res.status(400).json({message:"invalid token"})
     }
     
-    const user = await userModel.findById(decoded.id).select('userName role birthdate email status')
+    const user = await userModel.findById(decoded.id).select('userName role birthdate email status image')
     if(!user){
         return  res.status(404).json({message:"user not found"})
     }

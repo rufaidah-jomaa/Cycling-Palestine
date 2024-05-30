@@ -4,7 +4,7 @@ import postModel from "../../../DB/models/Post.model.js";
 import cloudinary from "../../services/cloudinary.js";
 
 export const getPosts = async (req, res, next) => {
-  const posts = await postModel.find({}).populate([
+  const posts = await postModel.find({}).select('title images mainImage')/*.populate([
     {
       path: "user_id",
       select: "userName",
@@ -17,7 +17,7 @@ export const getPosts = async (req, res, next) => {
       path: "comments",
       select: "text userName",
     },
-  ]);
+  ]);*/
   return res.json({ message: "success", posts });
 };
 
@@ -29,7 +29,7 @@ export const getDetailes = async (req, res) => {
       select: "userName",
     },{
     path: "comments",
-    select:'text userName'
+    select:'text userName userImage'
     },
 ])
   return res.status(200).json({ message: "success", post });
@@ -92,6 +92,7 @@ export const createComment = async (req, res, next) => {
     return res.json({ message: "You are blocked.. you cant comment" });
   }
   req.body.userName = req.user.userName;
+  req.body.userImage=req.user.image
   req.body.user_id = req.user._id;
   req.body.post_id = req.params.id;
   const post = await postModel.findById(req.params.id);

@@ -16,6 +16,9 @@ const commentSchema = new Schema({
        type:String,
         required:true  
     },
+    userImage:{
+        type:Object
+    },
     post_id:{
         type:Types.ObjectId,
         ref:"Post",  
