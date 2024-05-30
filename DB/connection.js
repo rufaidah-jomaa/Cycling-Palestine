@@ -8,4 +8,4 @@ import mongoose from 'mongoose';
     console.log(error)
   })
 }
- export default connectDB
+ export default connectDB;

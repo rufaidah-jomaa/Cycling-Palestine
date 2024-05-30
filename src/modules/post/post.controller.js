@@ -108,7 +108,13 @@ export const updatePost = async (req, res) => {
   }
   post.title = req.body.title;
   post.body = req.body.body;
-  if (req.file) {
+  if(req.files.mainImage){
+    const {secure_url,public_id}= await cloudinary.uploader.upload(req.files.mainImage[0].path,
+      {folder:`${process.env.App_Name}/posts/${req.body.title}`})
+  await cloudinary.uploader.destroy(post.mainImage.public_id)
+  post.mainImage = {secure_url,public_id}
+  }
+  if (req.files.images) {
     //
   }
   post.save();
@@ -119,6 +125,7 @@ export const deletePost = async (req, res) => {
   if (!deletedPost) {
     return res.status(404).json({ message: "post not found" });
   }
+  await cloudinary.uploader.destroy(deletedPost.mainImage.public_id);
   async function deleteImages() {
     for (const element of deletedPost.images) {
       await cloudinary.uploader.destroy(element.public_id);

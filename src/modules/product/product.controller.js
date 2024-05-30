@@ -59,7 +59,13 @@ export const getActive= async (req,res)=>{
 }
 
 export const getDetails = async (req,res)=>{
-    const product = await productModel.findById(req.params.id) //productId
+    const product = await productModel.findById(req.params.id).populate({
+        path:'reviews',
+        populate:{ //Populateبعملها كمان..populate النتيجة اللي جاي من اول 
+            path:'userId',
+            select:'userName'
+        }
+    }) //productId
     if(!product){
         return res.json({message:"product not found"})
     }
