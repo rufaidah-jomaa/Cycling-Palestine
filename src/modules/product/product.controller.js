@@ -2,6 +2,7 @@ import slugify from "slugify";
 import categoryModel from "../../../DB/models/Category.model.js";
 import cloudinary from "../../services/cloudinary.js";
 import productModel from "../../../DB/models/Product.model.js";
+import notificModel from "../../../DB/models/Notifications.model.js";
 
 export const test=(req,res)=>{
     return res.json('product')
