@@ -91,13 +91,16 @@ export const create=async(req,res)=>{
 
 export const getOrders=async(req,res)=>{
     const orders = await orderModel.find({
-        $or:[{
+      $or:[{
             status:'pending'
         },
         {
             status:'confirmed'
         }],
-     });
+     }).populate({
+        path:'userId',
+        select:'userName',
+     })
     return res.status(200).json({message:'success',orders})
 }
 
