@@ -3,6 +3,7 @@ import categoryModel from "../../../DB/models/Category.model.js";
 import cloudinary from "../../services/cloudinary.js";
 import productModel from "../../../DB/models/Product.model.js";
 import notificModel from "../../../DB/models/Notifications.model.js";
+import { pagination } from "../../services/pagination.js";
 
 export const test=(req,res)=>{
     return res.json('product')
@@ -40,22 +41,46 @@ export const creatProduct = async(req,res)=>{
 }
 
 export const getAll = async(req,res)=>{
+    const {skip,limit}= pagination(req.query.page,req.query.limit)
     const {id} = req.params;//categoryId
     const checkcategory=await categoryModel.findById({_id:id})
     if(!checkcategory){
         return res.status(404).json({message:"category not found!"})
     }
-    const products = await productModel.find({categoryId:id}).select('name price')
+    const products = await productModel.find({categoryId:id}).select('name price').skip(skip).limit(limit)
     return res.status(200).json({message:"success",products})
 }
 
 export const getActive= async (req,res)=>{
-    const {id} = req.params;//categoryId
-    const checkcategory=await categoryModel.findById({_id:id})
+  
+   const {skip,limit}= pagination(req.query.page,req.query.limit)
+    let queryObj = {...req.query}
+    const execQuery = ['page','limit','sort','search'] 
+    execQuery.map((ele)=>{
+        delete queryObj[ele]
+    })
+   
+    queryObj= JSON.stringify(queryObj)
+    queryObj=queryObj.replace(/gt|gte|lt|lte|in|nin|eq/g,match=>`$${match}`)
+    queryObj=JSON.parse(queryObj)
+    
+    //const {id} = queryObj.categoryId;//categoryId
+   
+    const checkcategory=await categoryModel.findById(queryObj.categoryId)
     if(!checkcategory){
         return res.status(404).json({message:"category not found!"})
     }
-    const products = await productModel.find({categoryId:id,status:'Active'})
+  
+    const mongooseQuery =  productModel.find(queryObj).skip(skip).limit(limit).select('name price status')
+    if(req.query.search){
+    mongooseQuery.find({
+        $or:[
+       { name:{$regex:req.query.search}},
+       {description:{$regex:req.query.search}}
+        ]
+    })
+}
+    const products= await mongooseQuery.sort(req.query.sort);
     return res.status(200).json({message:"success",products})
 }
 

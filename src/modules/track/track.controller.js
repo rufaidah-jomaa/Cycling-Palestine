@@ -2,6 +2,7 @@ import commentModel from "../../../DB/models/Comment.model.js";
 import notificModel from "../../../DB/models/Notifications.model.js";
 import trackModel from "../../../DB/models/Track.model.js";
 import cloudinary from "../../services/cloudinary.js";
+import { pagination } from "../../services/pagination.js";
 
 
 export const addTrack= async(req,res,next)=>{
@@ -32,10 +33,11 @@ export const updateTrack=async(req,res)=>{
     return res.json({message:"success",track})
 }
 export const getTracks= async (req,res,next)=>{
-    const tracks = await trackModel.find({}).populate({
+    const {skip,limit}= pagination(req.query.page,req.query.limit)
+    const tracks = await trackModel.find({}).skip(skip).limit(limit)/*.populate({
         path:'participants',
         select:'name user_id'
-    })
+    })*/
     return res.json({message:"success",tracks})
 }
 
@@ -52,7 +54,7 @@ export const getDetails = async (req,res)=>{
          },
          {
             path:'participants',
-            select:'name user_id'
+            select:'name user_id phone'
          }
     ])
     if(!track){

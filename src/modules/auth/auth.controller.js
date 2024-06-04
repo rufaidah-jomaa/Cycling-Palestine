@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from  'jsonwebtoken'
 import sendEmail from '../../services/sendEmail.js'
 import {customAlphabet, nanoid} from 'nanoid'
-import { OAuth2Client } from 'google-auth-library'
+
 
 export const getauth=(req,res)=>{
     return res.json("hello from auth ")

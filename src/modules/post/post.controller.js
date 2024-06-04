@@ -2,9 +2,11 @@ import commentModel from "../../../DB/models/Comment.model.js";
 import notificModel from "../../../DB/models/Notifications.model.js";
 import postModel from "../../../DB/models/Post.model.js";
 import cloudinary from "../../services/cloudinary.js";
+import { pagination } from "../../services/pagination.js";
 
 export const getPosts = async (req, res, next) => {
-  const posts = await postModel.find({}).select('title images mainImage')/*.populate([
+  const {skip,limit}=pagination(req.query.page,req.query.limit)
+  const posts = await postModel.find({}).skip(skip).limit(limit).select('title images mainImage')/*.populate([
     {
       path: "user_id",
       select: "userName",

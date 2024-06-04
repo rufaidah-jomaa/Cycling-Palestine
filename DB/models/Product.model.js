@@ -40,7 +40,7 @@ const productSchema = new Schema ({
     status:{
         type:String,
         default:'Active',
-        enum:['Active','inActive']
+        enum:['Active','notActive']
     },
     categoryId:{
         type:Types.ObjectId,

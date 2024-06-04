@@ -4,7 +4,7 @@ import cloudinary from "../../services/cloudinary.js";
 export const getUsers = async (req, res) => {
   const users = await userModel
     .find({})
-    .select("userName image role status Address");
+    .select("userName image role status Address email");
   res.status(200).json({ message: "success", users });
 };
 

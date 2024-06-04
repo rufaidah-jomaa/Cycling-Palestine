@@ -14,7 +14,7 @@ router.post('/createProduct',auth(endPoints.createProduct),uploadFile(fileType.i
     {name:'subImages',maxCount:4}
 ]),asyncHandler(controller.creatProduct))
 router.get('/getAll/:id',auth(endPoints.getAll),asyncHandler(controller.getAll))
-router.get('/getActive/:id',asyncHandler(controller.getActive))
+router.get('/getActive',asyncHandler(controller.getActive))
 router.get('/getDetails/:id',asyncHandler(controller.getDetails))
 router.patch('/update/:id',auth(endPoints.update),uploadFile(fileType.image).fields([
     {name:'mainImage',maxCount:1},
