@@ -3,17 +3,18 @@ import couponModel from "../../../DB/models/Coupon.model.js"
 import orderModel from "../../../DB/models/Order.model.js"
 import productModel from "../../../DB/models/Product.model.js"
 import userModel from "../../../DB/models/User.model.js"
+import { AppError } from "../../services/AppError.js"
 
 export const getOrderTest=(req,res)=>{
     return res.json("hello from order")
 }
 
-export const create=async(req,res)=>{
+export const create=async(req,res,next)=>{
     //return res.json(req.user._id)
     const {couponCode}=req.body;
     const cart = await cartModel.findOne({userId:req.user._id})
     if(!cart || cart.products.length == 0){
-        return res.json({message:"cart is empty!"})
+        return next(new AppError('cart is empty!'),403)
     }
     
     req.body.products=cart.products // add to req.body the products 
@@ -21,14 +22,15 @@ export const create=async(req,res)=>{
     if(req.body.couponCode){
         const coupon = await couponModel.findOne({code:couponCode})
         if(!coupon){
-            return res.status(404).json({message:"coupon not found!"})
+            return next(new AppError('coupon not found!'),404)
+
         }
         if(coupon.expiredDate < new Date()){
-            return res.status(404).json({message:"coupon expired!"})
+            return next(new AppError('coupon expired!'),404)
         }
     
        if(coupon.usedBy.includes(req.user._id)){
-        return res.status(409).json({message:"coupon already used"})
+        return next(new AppError('coupon already used'),409)
        }
        req.body.coupon=coupon;
     }
@@ -45,7 +47,7 @@ export const create=async(req,res)=>{
     stock:{$gte:product.quantity}
   })
     if(!checkProduct){
-        return res.status(400).json({message:"product quantity not available"})
+        return next(new AppError('product quantity not available'),403)
     }
     product = product.toObject()
     product.productName=checkProduct.name //المعلومات تخزن جوا الداتابيس في المونجوز على شكل(Bson) .. Binary Json 
@@ -109,13 +111,13 @@ export const getMyOrders= async(req,res)=>{
     return res.status(200).json({message:'success',orders})
 }
 
-export const changeStatus = async(req,res)=>{
+export const changeStatus = async(req,res,next)=>{
     const {orderId}=req.params;
     const {status}=req.body;
 
     const order= await orderModel.findById(orderId)
     if(!order){
-        return res.status(400).json({message:'order not found'})
+        return next(new AppError("order not found",404))
     }
     order.status=status;
     order.save();

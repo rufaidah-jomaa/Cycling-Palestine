@@ -15,8 +15,7 @@ import cartRouter from './src/modules/cart/cart.router.js'
 import couponRouter from './src/modules/coupon/coupon.router.js'
 import newsRouter from './src/modules/news/news.router.js'
 import { globalErrorHandling } from "./src/services/errorHandling.js";
-import session from 'express-session'
-import  passport from 'passport'
+
 
 export const initApp = (app,express)=>{
      connectDB();

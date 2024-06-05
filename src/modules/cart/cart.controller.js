@@ -1,11 +1,12 @@
 import cartModel from "../../../DB/models/Cart.model.js"
+import { AppError } from "../../services/AppError.js"
 
 export const test=(req,res)=>{
     return res.json("Cart")
 }
-export const create=async(req,res)=>{
+export const create=async(req,res,next)=>{
     if(req.user.status =='Blocked'){
-        return res.json({message:"You are blocked.. you cant add products to cart"})
+        return next(new AppError('You are blocked.. you cant add products to cart',403))
     }
     const {productId} = req.body
    
@@ -19,7 +20,7 @@ export const create=async(req,res)=>{
     }
     for(let i = 0;i<cart.products.length;i++){
         if(cart.products[i].productId == productId){
-         return res.json({message:"product already exists"})
+         return next(new AppError('product already exists',401))
         }
     }
     cart.products.push({productId:productId})
@@ -47,6 +48,7 @@ export const clear=async(req,res)=>{
         products:[],
     },{new:true})
     return res.json({message:"cart cleared",cart})
+   
 }
 
 export const updateQuantity=async(req,res)=>{

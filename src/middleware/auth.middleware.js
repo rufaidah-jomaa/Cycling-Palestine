@@ -1,28 +1,29 @@
 import jwt from 'jsonwebtoken'
 import userModel from '../../DB/models/User.model.js';
+import { AppError } from '../services/AppError.js';
 export const roles ={
     Admin : 'Admin',
     User: 'User'
 }
 
-export const auth = ( accessRole = [])=>{  //لسا ما عملت كيف المستخدم يصير ادمن داينمك
+export const auth = ( accessRole = [])=>{  
     return async(req,res,next)=>{
     const {authorization}=req.headers;
     if(! authorization?.startsWith(process.env.BEARERKEY)){
-        return res.json("invalid authorization")
+        return next( new AppError('invalid authorization',401))
     }
     const token = authorization.split(process.env.BEARERKEY)[1]
     const decoded = jwt.verify(token,process.env.LOGINSIG)
     if (!decoded){
-        return res.status(400).json({message:"invalid token"})
+        return next( new AppError('invalid token',401))
     }
     
     const user = await userModel.findById(decoded.id).select('userName role birthdate email status image ')
     if(!user){
-        return  res.status(404).json({message:"user not found"})
+        return next( new AppError('user not found',404))
     }
     if (!accessRole.includes(user.role)){
-        return res.status(403).json({message:"you do not have a permession"})
+        return next( new AppError('you do not have a permession',403))
     }
     req.user=user
     next();

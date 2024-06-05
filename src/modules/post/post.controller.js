@@ -1,6 +1,7 @@
 import commentModel from "../../../DB/models/Comment.model.js";
 import notificModel from "../../../DB/models/Notifications.model.js";
 import postModel from "../../../DB/models/Post.model.js";
+import { AppError } from "../../services/AppError.js";
 import cloudinary from "../../services/cloudinary.js";
 import { pagination } from "../../services/pagination.js";
 
@@ -58,7 +59,7 @@ req.body.mainImage= {secure_url,public_id}
   req.body.user_id = req.user._id;
   const post = await postModel.create(req.body);
   if (!post) {
-    return next(new Error("Couldn't create post"));
+    return next(new AppError("Couldn't create post",500));
   }
   const notification = await notificModel.create({
     content: "قام المسؤول باضافة منشور جديد يمكنك التفاعل معه الان!",
@@ -72,7 +73,8 @@ export const likePost = async (req, res, next) => {
   const { id } = req.params; //postID
   const post = await postModel.findById(id);
   if (!post) {
-    return res.status(404).json({ message: "post not found" });
+    return next(new AppError("post not found",404));
+
   }
   const like = await postModel.findByIdAndUpdate(
     { _id: id },
@@ -84,14 +86,15 @@ export const likePost = async (req, res, next) => {
     { new: true }
   );
   if (!like) {
-    return next(new Error("Error in liking the Post"));
+    return next(new AppError("Error in liking the Post",500));
   }
   return res.json({ message: "success", like });
 };
 
 export const createComment = async (req, res, next) => {
   if (req.user.status == "Blocked") {
-    return res.json({ message: "You are blocked.. you cant comment" });
+    return next(new AppError("You are blocked.. you cant comment",403));
+
   }
   req.body.userName = req.user.userName;
   req.body.userImage=req.user.image
@@ -99,7 +102,8 @@ export const createComment = async (req, res, next) => {
   req.body.post_id = req.params.id;
   const post = await postModel.findById(req.params.id);
   if (!post) {
-    return res.status(404).json({ message: "post not found" });
+    return next(new AppError("post not found",404));
+
   }
   if (req.file) {
     const { secure_url, public_id } = await cloudinary.uploader.upload(
@@ -112,10 +116,10 @@ export const createComment = async (req, res, next) => {
   return res.json({ message: "success", comment });
 };
 
-export const updatePost = async (req, res) => {
+export const updatePost = async (req, res,next) => {
   const post = await postModel.findById(req.params.id);
   if (!post) {
-    return res.status(404).json({ message: "success" });
+    return next(new AppError("post not found",404));
   }
   post.title = req.body.title;
   post.body = req.body.body;
@@ -131,10 +135,11 @@ export const updatePost = async (req, res) => {
   post.save();
   return res.status(201).json({ message: "success", post });
 };
-export const deletePost = async (req, res) => {
+export const deletePost = async (req, res,next) => {
   const deletedPost = await postModel.findByIdAndDelete(req.params.id);
   if (!deletedPost) {
-    return res.status(404).json({ message: "post not found" });
+    return next(new AppError("post not found",404));
+
   }
   await cloudinary.uploader.destroy(deletedPost.mainImage.public_id);
   async function deleteImages() {
@@ -146,12 +151,13 @@ export const deletePost = async (req, res) => {
   return res.status(201).json({ message: "success", deletedPost });
 };
 
-export const deleteComment = async (req, res) => {
+export const deleteComment = async (req, res,next) => {
   //for post and track the same link
 
   const comment = await commentModel.findById(req.params.id);
   if (!comment) {
-    return res.status(404).json({ message: "comment not found" });
+    return next(new AppError("comment not found",404));
+
   }
   if (req.user._id == comment.user_id) {
     await commentModel.findByIdAndDelete(req.params.id);
