@@ -7,7 +7,7 @@ import { pagination } from "../../services/pagination.js";
 
 export const getPosts = async (req, res, next) => {
   const {skip,limit}=pagination(req.query.page,req.query.limit)
-  const posts = await postModel.find({}).skip(skip).limit(limit).select('title images mainImage')/*.populate([
+  const posts = await postModel.find({}).skip(skip).limit(limit).select('title mainImage')/*.populate([
     {
       path: "user_id",
       select: "userName",
@@ -38,25 +38,25 @@ export const getDetailes = async (req, res) => {
   return res.status(200).json({ message: "success", post });
 };
 
-export const createPost = async (req, res, next) => {
-    
-  const { title, description } = req.body;
-  
+export const createPost = async(req, res, next) => {
+
+  const { title } = req.body;
   const {secure_url,public_id} = await cloudinary.uploader.upload(req.files.mainImage[0].path,
     {folder:`${process.env.App_Name}/posts/${title}`})
-req.body.mainImage= {secure_url,public_id} 
-
+       req.body.mainImage= {secure_url,public_id} 
+       
+       return res.json(req.body)
   req.body.images = [];
- 
   for (const file of req.files.images) {
     // file: iteration
     const { secure_url, public_id } = await cloudinary.uploader.upload(
       file.path,
       { folder: `${process.env.App_Name}/posts/${title}` }
     );
-    req.body.images.push({ secure_url, public_id });
+    req.body.images.push({secure_url,public_id});
   }
   req.body.user_id = req.user._id;
+  
   const post = await postModel.create(req.body);
   if (!post) {
     return next(new AppError("Couldn't create post",500));
@@ -116,22 +116,38 @@ export const createComment = async (req, res, next) => {
   return res.json({ message: "success", comment });
 };
 
-export const updatePost = async (req, res,next) => {
+export const updatePost = async (req,res,next) => {
+ 
   const post = await postModel.findById(req.params.id);
   if (!post) {
     return next(new AppError("post not found",404));
   }
   post.title = req.body.title;
   post.body = req.body.body;
+  
   if(req.files.mainImage){
     const {secure_url,public_id}= await cloudinary.uploader.upload(req.files.mainImage[0].path,
       {folder:`${process.env.App_Name}/posts/${req.body.title}`})
   await cloudinary.uploader.destroy(post.mainImage.public_id)
   post.mainImage = {secure_url,public_id}
   }
-  if (req.files.images) {
-    //
-  }
+  req.body.images=[]
+  if(req.files.images){
+     
+     async function deleteImages () {
+         for (const element of product.subImages) {
+             await cloudinary.uploader.destroy(element.public_id)    
+         }
+       }
+       deleteImages()
+       post.images=[]
+    for (const file of req.files.images) { // file: iteration   
+      const {secure_url,public_id} = await cloudinary.uploader.upload(file.path,
+             {folder:`${process.env.App_Name}/posts/${req.body.title}`})
+             req.body.images.push({secure_url,public_id})
+     }
+     post.images=req.body.images
+    }
   post.save();
   return res.status(201).json({ message: "success", post });
 };

@@ -1,6 +1,7 @@
 import commentModel from "../../../DB/models/Comment.model.js";
 import notificModel from "../../../DB/models/Notifications.model.js";
 import trackModel from "../../../DB/models/Track.model.js";
+import { AppError } from "../../services/AppError.js";
 import cloudinary from "../../services/cloudinary.js";
 import { pagination } from "../../services/pagination.js";
 
@@ -9,16 +10,17 @@ export const addTrack= async(req,res,next)=>{
     
     const track = await trackModel.create(req.body)
     if(!track){
-        return next(new Error("Track not created"))
+        return next(new AppError("Track not created",500))
     }
     const notification = await notificModel.create({content:"قام المسؤول باضافة رحلة جديدة يمكنك المشاركة بها الان!"})
     return res.json({message:"success",track})
 }
 
-export const updateTrack=async(req,res)=>{
+export const updateTrack=async(req,res,next)=>{
     const track = await trackModel.findById(req.params.id)
     if(! track){
-     return res.status(404).json("track not found")
+     return next(new AppError("track not found",404))
+
     }
    track.trackName=req.body.trackName;
    track.distance=req.body.distance;
@@ -41,7 +43,7 @@ export const getTracks= async (req,res,next)=>{
     return res.json({message:"success",tracks})
 }
 
-export const getDetails = async (req,res)=>{
+export const getDetails = async (req,res,next)=>{
     const track = await trackModel.findById(req.params.id).populate([
          {
             path:'like',
@@ -58,7 +60,7 @@ export const getDetails = async (req,res)=>{
          }
     ])
     if(!track){
-        return res.json({message:"track not found"})
+        return next(new AppError("track not found",404))
     }
     return res.status(200).json({message:"success",track})
 }
@@ -94,14 +96,14 @@ export const likeTrack = async (req,res,next)=>{
         {new:true}
     )
     if(!like){
-        return  next(new Error('Error in liking the track'))
+        return  next(new AppError('Error in liking the track',500))
     }
     return res.json({message:"success",like})
 }
 
 export const createComment = async(req,res,next)=>{
     if(req.user.status =='Blocked'){
-        return res.json({message:"You are blocked.. you cant comment"})
+        return next(new AppError("You are blocked.. you cant comment",403))
     }
      req.body.userName = req.user.userName
     req.body.user_id=req.user._id;
@@ -115,10 +117,10 @@ export const createComment = async(req,res,next)=>{
     return res.json({message:"success",comment})
 }
 
-export const deleteTrack=async(req,res)=>{
+export const deleteTrack=async(req,res,next)=>{
     const deletedTrack=await trackModel.findByIdAndDelete(req.params.id)
     if(!deletedTrack){
-        return res.status(404).json({message:"track not found"})
+        return next(new AppError("track not found",404))
     }
     const notification = await notificModel.create({content:"قام المسؤول بالغاء رحلة..تاكد من ذلك!"})
 

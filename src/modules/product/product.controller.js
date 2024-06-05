@@ -4,17 +4,18 @@ import cloudinary from "../../services/cloudinary.js";
 import productModel from "../../../DB/models/Product.model.js";
 import notificModel from "../../../DB/models/Notifications.model.js";
 import { pagination } from "../../services/pagination.js";
+import { AppError } from "../../services/AppError.js";
 
 export const test=(req,res)=>{
     return res.json('product')
 }
 
-export const creatProduct = async(req,res)=>{
+export const creatProduct = async(req,res,next)=>{
     const {name,price,discount,categoryId}=req.body;
 
     const checkCategory= await categoryModel.findById(categoryId)
     if(!checkCategory){
-        return res.status(404).json({message:"Category Not Found!"})
+        return next(new AppError("Category Not Found!",404))
     }
 
     req.body.slug=slugify(name)
@@ -40,18 +41,19 @@ export const creatProduct = async(req,res)=>{
     return res.status(201).json({message:"product added successfully!",product})
 }
 
-export const getAll = async(req,res)=>{
+export const getAll = async(req,res,next)=>{
     const {skip,limit}= pagination(req.query.page,req.query.limit)
     const {id} = req.params;//categoryId
     const checkcategory=await categoryModel.findById({_id:id})
     if(!checkcategory){
-        return res.status(404).json({message:"category not found!"})
+        return next(new AppError("category not found!!",404))
+
     }
     const products = await productModel.find({categoryId:id}).select('name price').skip(skip).limit(limit)
     return res.status(200).json({message:"success",products})
 }
 
-export const getActive= async (req,res)=>{
+export const getActive= async (req,res,next)=>{
   
    const {skip,limit}= pagination(req.query.page,req.query.limit)
     let queryObj = {...req.query}
@@ -65,12 +67,13 @@ export const getActive= async (req,res)=>{
     queryObj=JSON.parse(queryObj)
     
     //const {id} = queryObj.categoryId;//categoryId
+
    
     const checkcategory=await categoryModel.findById(queryObj.categoryId)
     if(!checkcategory){
-        return res.status(404).json({message:"category not found!"})
+        return next(new AppError("category not found!",404))
     }
-  
+  //return res.json(id)
     const mongooseQuery =  productModel.find(queryObj).skip(skip).limit(limit).select('name price status')
     if(req.query.search){
     mongooseQuery.find({
@@ -84,7 +87,7 @@ export const getActive= async (req,res)=>{
     return res.status(200).json({message:"success",products})
 }
 
-export const getDetails = async (req,res)=>{
+export const getDetails = async (req,res,next)=>{
     const product = await productModel.findById(req.params.id).populate({
         path:'reviews',
         populate:{ //Populateبعملها كمان..populate النتيجة اللي جاي من اول 
@@ -93,21 +96,22 @@ export const getDetails = async (req,res)=>{
         }
     }) //productId
     if(!product){
-        return res.json({message:"product not found"})
+        return next(new AppError("product not found",404))
+
     }
     return res.status(200).json({message:"success",product})
 }
 
-export const update = async(req,res)=>{ //بدها تعديلللللل
+export const update = async(req,res,next)=>{
     //return res.json(typeof(parseInt(req.body.price)))
     const product = await productModel.findById(req.params.id)//productId
     if(! product){
-     return res.status(404).json("product not found")
+     return next(new AppError("product not found",404))
     }
    
    product.name = req.body.name.toLowerCase();
     if (await productModel.findOne({name:product.name , _id:{$ne:req.params.id}})){
-     return res.status(409).json("This name already exists")
+        return next(new AppError("This name already exists",409))
     }
  product.slug =slugify(req.body.name.toLowerCase())
  product.status = req.body.status
@@ -130,20 +134,22 @@ export const update = async(req,res)=>{ //بدها تعديلللللل
         }
       }
       deleteSub()
+      product.subImages=[]
    for (const file of req.files.subImages) { // file: iteration   
      const {secure_url,public_id} = await cloudinary.uploader.upload(file.path,
             {folder:`${process.env.App_Name}/product/${req.body.name}/subImages`})
             req.body.subImages.push({secure_url,public_id})
     }
+    product.subImages=req.body.subImages
    }
    product.save()
     return res.json({message:"success",product})
 }
 
-export const destroy = async(req,res)=>{
+export const destroy = async(req,res,next)=>{
     const product = await productModel.findByIdAndDelete(req.params.id)//productId
     if(!product){
-        return res.status(404).json({message:"Product Not Found!"})
+        return next (new AppError("Product Not Found!",404))
     }
       await cloudinary.uploader.destroy(product.mainImage.public_id)
      async function deleteSub () {

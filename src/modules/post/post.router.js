@@ -9,9 +9,9 @@ const router = Router();
 router.get('/',asyncHandler(controller.getPosts))
 router.get('/getDetails/:id',asyncHandler(controller.getDetailes))
 router.post('/',auth(endPoints.createPost),uploadFile(fileType.image).fields([
-    {name:'mainImage',maxCount:1},
-    {name:'images',maxCount:20},   
-]),asyncHandler(controller.createPost));//بدها تعديل لانه بدو ينشر اكثر من صورة
+    {name:"mainImage",maxCount:1},
+    {name:"images",maxCount:20}
+]),asyncHandler(controller.createPost))
 router.patch('/update/:id',auth(endPoints.updatePost),asyncHandler(controller.updatePost))
 router.delete('/delete/:id',auth(endPoints.deletePost),asyncHandler(controller.deletePost))
 router.patch('/like/:id',auth(endPoints.likePost),asyncHandler(controller.likePost))

@@ -1,4 +1,5 @@
 import userModel from "../../../DB/models/User.model.js";
+import { AppError } from "../../services/AppError.js";
 import cloudinary from "../../services/cloudinary.js";
 
 export const getUsers = async (req, res) => {
@@ -10,7 +11,7 @@ export const getUsers = async (req, res) => {
 
 export const getProfile = async (req, res, next) => {
   if (req.user.status == "Blocked") {
-    return res.json({ message: "you ara blocked" });
+    return next(new AppError("you ara blocked",403))
   }
   const user = await userModel.findById(req.user._id);
   return res.json({ message: "success", user });
@@ -29,7 +30,7 @@ export const uploadPic = async (req, res, next) => {
   return res.json({ message: "success", user });
 };
 
-export const deletImage = async (req, res) => {
+export const deletImage = async (req, res,next) => {
 
   const user = await userModel.findById(req.user._id)
   await cloudinary.uploader.destroy(user.image.public_id)
@@ -41,13 +42,13 @@ export const deletImage = async (req, res) => {
   if (deletedImage.modifiedCount === 1) {
     return res.json({ message: "success" });
   } else {
-    return res.json({ message: "not deleted" });
+    return next(new AppError("not deleted",500))
   }
 };
-export const updateProfile = async (req, res) => {
+export const updateProfile = async (req, res,next) => {
   const user = await userModel.findById(req.params.id);
   if (!user) {
-    return res.status(404).json({ message: "user not found" });
+    return next(new AppError("user not found",404))
   }
   user.userName = req.body.userName;
   user.gender = req.body.gender;
@@ -67,15 +68,15 @@ export const updateProfile = async (req, res) => {
   await user.save();
   return res.json({ message: "success", user });
 };
-export const deleteAccount = async (req, res) => {
+export const deleteAccount = async (req, res,next) => {
   const user = await userModel.findByIdAndDelete(req.params.id);
   if (!user) {
-    return res.status(404).json({ message: "user not found" });
+    return next(new AppError("user not found",404))
   }
   return res.json({ message: "success", deletedUser: user });
 };
 
-export const blockUser = async (req, res) => {
+export const blockUser = async (req, res,next) => {
   const user = await userModel.findOneAndUpdate(
     { _id: req.params.id },
     {
@@ -84,12 +85,12 @@ export const blockUser = async (req, res) => {
     { new: true }
   );
   if (!user) {
-    return res.status(404).json({ message: "user not found" });
+    return next(new AppError("user not found",404))
   }
   return res.json({ message: "success", user });
 };
 
-export const unBlockUser = async (req, res) => {
+export const unBlockUser = async (req, res,next) => {
   const user = await userModel.findOneAndUpdate(
     { _id: req.params.id },
     {
@@ -98,11 +99,11 @@ export const unBlockUser = async (req, res) => {
     { new: true }
   );
   if (!user) {
-    return res.status(404).json({ message: "user not found" });
+    return next(new AppError("user not found",404))
   }
   return res.json({ message: "success", user });
 };
-export const addAdmin = async (req, res) => {
+export const addAdmin = async (req, res,next) => {
   const user = await userModel.findOneAndUpdate(
     { _id: req.params.id },
     {
@@ -111,12 +112,13 @@ export const addAdmin = async (req, res) => {
     { new: true }
   );
   if (!user) {
-    return res.status(404).json({ message: "user not found" });
+    
+    return next(new AppError("user not found",404))
   }
   return res.json({ message: "success", user });
 };
 
-export const removeAdmin = async (req, res) => {
+export const removeAdmin = async (req, res,next) => {
   const user = await userModel.findOneAndUpdate(
     { _id: req.params.id },
     {
@@ -125,7 +127,7 @@ export const removeAdmin = async (req, res) => {
     { new: true }
   );
   if (!user) {
-    return res.status(404).json({ message: "user not found" });
+    return next(new AppError("user not found",404))
   }
   return res.json({ message: "success", user });
 };
