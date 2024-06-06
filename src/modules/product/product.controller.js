@@ -44,7 +44,7 @@ export const creatProduct = async(req,res,next)=>{
 export const getAll = async(req,res,next)=>{
     const {skip,limit}= pagination(req.query.page,req.query.limit)
 
-    const products = await productModel.find({}).select('name price mainImage').skip(skip).limit(limit)
+    const products = await productModel.find({status:"Active"}).select('name price mainImage').skip(skip).limit(limit)
     return res.status(200).json({message:"success",products})
 }
 
