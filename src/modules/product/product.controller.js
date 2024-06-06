@@ -43,13 +43,8 @@ export const creatProduct = async(req,res,next)=>{
 
 export const getAll = async(req,res,next)=>{
     const {skip,limit}= pagination(req.query.page,req.query.limit)
-    const {id} = req.params;//categoryId
-    const checkcategory=await categoryModel.findById({_id:id})
-    if(!checkcategory){
-        return next(new AppError("category not found!!",404))
 
-    }
-    const products = await productModel.find({categoryId:id}).select('name price').skip(skip).limit(limit)
+    const products = await productModel.find({}).select('name price mainImage').skip(skip).limit(limit)
     return res.status(200).json({message:"success",products})
 }
 
@@ -74,7 +69,7 @@ export const getActive= async (req,res,next)=>{
         return next(new AppError("category not found!",404))
     }
   //return res.json(id)
-    const mongooseQuery =  productModel.find(queryObj).skip(skip).limit(limit).select('name price status')
+    const mongooseQuery =  productModel.find(queryObj).skip(skip).limit(limit).select('name price mainImage')
     if(req.query.search){
     mongooseQuery.find({
         $or:[
