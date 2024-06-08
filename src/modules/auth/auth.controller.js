@@ -28,7 +28,7 @@ export const signup= async(req,res,next)=>{
     const refreshToken = jwt.sign({email},process.env.confirmEmailSIG,{expiresIn:60*60*24*7})
     
        
-     await sendEmail(email,"Cycling Palestine" ,userName,token,refreshToken)
+     await sendEmail(email,"Cycling Palestine" ,userName,token,refreshToken,'register')
     return res.status(201).json({message:"success",newUser})
 }
 export const confirmEmail= async(req,res)=>{

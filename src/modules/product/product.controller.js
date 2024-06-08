@@ -96,7 +96,15 @@ export const getDetails = async (req,res,next)=>{
     }
     return res.status(200).json({message:"success",product})
 }
-
+export const getAllStatus= async(req,res,next)=>{
+    const {id}=req.params
+    const checkCategory= await categoryModel.findById(id)
+    if(!checkCategory){
+        return next(new AppError("category not found!",404))
+    }
+    const products = await productModel.find({categoryId:id})
+    return res.status(200).json({message:"success",products})
+}
 export const update = async(req,res,next)=>{
     //return res.json(typeof(parseInt(req.body.price)))
     const product = await productModel.findById(req.params.id)//productId
@@ -140,7 +148,15 @@ export const update = async(req,res,next)=>{
    product.save()
     return res.json({message:"success",product})
 }
-
+export const changeStatus = async(req,res,next)=>{
+    const {id}=req.params
+    const {status}=req.body
+    const product= await productModel.findByIdAndUpdate(id,{status:status},{new:true})
+    if(!product){
+        return next(new AppError("product not found",404))
+    }
+    return res.status(200).json({message:"success",product})
+}
 export const destroy = async(req,res,next)=>{
     const product = await productModel.findByIdAndDelete(req.params.id)//productId
     if(!product){

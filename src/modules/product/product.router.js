@@ -16,10 +16,11 @@ router.post('/createProduct',auth(endPoints.createProduct),uploadFile(fileType.i
 router.get('/getAll',asyncHandler(controller.getAll))
 router.get('/getActive',asyncHandler(controller.getActive))
 router.get('/getDetails/:id',asyncHandler(controller.getDetails))
+router.get('/getallproducts/:id',auth(endPoints.getStatus),asyncHandler(controller.getAllStatus))
 router.patch('/update/:id',auth(endPoints.update),uploadFile(fileType.image).fields([
     {name:'mainImage',maxCount:1},
     {name:'subImages',maxCount:4}
 ]),asyncHandler(controller.update))
-
+router.patch('/changeStatus/:id',auth(endPoints.changeStatus),asyncHandler(controller.changeStatus))
 router.delete('/delete/:id',auth(endPoints.destroy),asyncHandler(controller.destroy))
 export default router;
