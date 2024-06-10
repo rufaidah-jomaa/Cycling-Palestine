@@ -26,7 +26,7 @@ export const getPosts = async (req, res, next) => {
 
 export const getDetailes = async (req, res) => {
   const { id } = req.params;
-  const post = await postModel.findById(req.params.id).populate([
+  const post = await postModel.findById(id).populate([
     {
       path: "like",
       select: "userName",
@@ -45,7 +45,6 @@ export const createPost = async(req, res, next) => {
     {folder:`${process.env.App_Name}/posts/${title}`})
        req.body.mainImage= {secure_url,public_id} 
        
-       return res.json(req.body)
   req.body.images = [];
   for (const file of req.files.images) {
     // file: iteration
