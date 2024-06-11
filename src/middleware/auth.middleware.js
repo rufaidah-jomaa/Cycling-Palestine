@@ -18,7 +18,7 @@ export const auth = ( accessRole = [])=>{
         return next( new AppError('invalid token',401))
     }
     
-    const user = await userModel.findById(decoded.id).select('userName role birthdate email status image ')
+    const user = await userModel.findById(decoded.id).select('userName role birthdate email status image phone ')
     if(!user){
         return next( new AppError('user not found',404))
     }

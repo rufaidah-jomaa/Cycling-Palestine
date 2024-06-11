@@ -47,7 +47,9 @@ export const participate= async(req,res,next)=>{
     }
     const participate = await ParticipatingModel.create({name:req.user.userName,
         user_id:req.user._id,
-        track_id:t_id
+        track_id:t_id,
+        email:req.user.email,
+        phone:req.user.phone
     })
     
     const updateNum= await trackModel.findOneAndUpdate({_id:t_id}, { $inc : {number_of_participants:1}},{new:true}) //update #of participants

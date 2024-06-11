@@ -16,6 +16,14 @@ const participatingSchema = new Schema({
         ref:"Track",
         required:true
     },
+    phone:{
+      type:String
+    },
+     email: {
+     type: String,
+   
+    unique: true,
+    },
    isPaid:{
         type:Boolean,
         default:false,

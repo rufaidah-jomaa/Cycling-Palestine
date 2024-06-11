@@ -56,7 +56,7 @@ export const getDetails = async (req,res,next)=>{
          },
          {
             path:'participants',
-            select:'name user_id phone'
+            select:'name user_id phone email'
          }
     ])
     if(!track){
