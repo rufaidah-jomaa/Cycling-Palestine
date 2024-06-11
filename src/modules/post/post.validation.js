@@ -26,7 +26,7 @@ export const likePostSchema = Joi.object({
 
 export const createCommentSchema = Joi.object({
     id:generalValidation.id,
-    text:Joi.string().required(),
+    text:Joi.string(),
     image:generalValidation.image
 })
 

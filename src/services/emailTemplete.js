@@ -17,6 +17,10 @@ export const emailTemplate = (email,userName,token,refreshToken,subject)=>{
         <p>'أهلاً بك في رحلة جديدة على البسكليت.. سعيدون لمشاركتنا معك رحلة مليئة بالمغامرات و المعلومات الجديدة.. نتمنى لك القدر الاكبر من الافادة و المتعة!</p>
         `
     }
+    if(subject=='sendCode')
+        {
+            content=`<h3>The Code is : ${token}</h3>`
+        }
   return  ` <!DOCTYPE html>
     <html>
     <head>

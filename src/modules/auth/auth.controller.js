@@ -90,7 +90,8 @@ export const sendCode =async(req,res,next)=>{
        if(!user){
         return next( new AppError('user not found',404))
        }
-       await sendEmail(email,'RESET PASSWORD',`<h3>The Code is : ${code}</h3>`)
+       const y=''
+       await sendEmail(email,"Reset Password" ,user.userName,code,y,'sendCode')
        return res.status(200).json({message:"success"}
        )
 }

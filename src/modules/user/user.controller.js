@@ -30,7 +30,7 @@ export const uploadPic = async (req, res, next) => {
   return res.json({ message: "success", user });
 };
 
-export const deletImage = async (req, res,next) => {
+export const deleteImage = async (req, res,next) => {
 
   const user = await userModel.findById(req.user._id)
   await cloudinary.uploader.destroy(user.image.public_id)
