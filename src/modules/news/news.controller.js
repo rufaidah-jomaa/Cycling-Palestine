@@ -1,8 +1,8 @@
 import newsModel from "../../../DB/models/news.model.js";
 
 export const add = async(req,res,next)=>{
-    const {content}=req.body;
-    const addedNew = await newsModel.create({content});
+    const {title,content,date}=req.body;
+    const addedNew = await newsModel.create({title,content,date});
     if(!addedNew){
         return next(new AppError('error while adding',500))
     }

@@ -2,7 +2,9 @@ import Joi from 'joi'
 import { generalValidation } from '../../middleware/validation.middleware.js'
 
 export const addSchema = Joi.object({
-   content:Joi.string().required() 
+    title:Joi.string().required(),
+   content:Joi.string().required() ,
+   date:Joi.date().required()
 })
 
 export const updateNewsSchema = Joi.object({

@@ -8,7 +8,7 @@ import * as schema from './news.validation.js'
 const router = Router();
 
 router.post('/add',validation(schema.addSchema),auth(endPoints.add),asyncHandler(controller.add))
-router.get('/',auth(endPoints.get),asyncHandler(controller.getNews))
+router.get('/',asyncHandler(controller.getNews))
 router.patch('/update/:id',validation(schema.updateNewsSchema),auth(endPoints.update),asyncHandler(controller.update))
 router.delete('/delete/:id',validation(schema.deleteNewsSchema),auth(endPoints.delete),asyncHandler(controller.destroy))
 

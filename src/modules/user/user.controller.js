@@ -83,7 +83,7 @@ export const blockUser = async (req, res,next) => {
       status: "Blocked",
     },
     { new: true }
-  );
+  ).select('userName status')
   if (!user) {
     return next(new AppError("user not found",404))
   }
@@ -97,7 +97,7 @@ export const unBlockUser = async (req, res,next) => {
       status: "Active",
     },
     { new: true }
-  );
+  ).select('userName status')
   if (!user) {
     return next(new AppError("user not found",404))
   }
@@ -110,7 +110,7 @@ export const addAdmin = async (req, res,next) => {
       role: "Admin",
     },
     { new: true }
-  );
+  ).select('userName role')
   if (!user) {
     
     return next(new AppError("user not found",404))
@@ -125,7 +125,7 @@ export const removeAdmin = async (req, res,next) => {
       role: "User",
     },
     { new: true }
-  );
+  ).select('userName role')
   if (!user) {
     return next(new AppError("user not found",404))
   }
