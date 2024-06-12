@@ -8,5 +8,6 @@ export const createOrderSchema = Joi.object({
 })
 
 export const changeStatusSchema = Joi.object({
-    orderId:generalValidation.id
+    orderId:generalValidation.id,
+    status:Joi.string().valid('pending','cancelled','confirmed','onway','delivered').required()
 })

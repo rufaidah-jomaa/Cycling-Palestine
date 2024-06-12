@@ -4,7 +4,6 @@ import mongoose, { Schema, Types, model } from 'mongoose'
 const productSchema = new Schema ({
     name:{
         type:String,
-        unique:true,
         required:true
     },
     slug:{
