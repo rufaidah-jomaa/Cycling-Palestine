@@ -29,7 +29,7 @@ export const initApp = (app,express)=>{
   }
   callback(null, corsOptions) // callback expects two parameters: error and options
 }
-     app.use(cors(corsOptionsDelegate))
+     app.use(cors())
      app.use(express.json()); //
       app.get("/", (req, res) => {
       return res.status(200).json("welcome");
