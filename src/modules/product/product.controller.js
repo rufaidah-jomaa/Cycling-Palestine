@@ -42,15 +42,15 @@ export const creatProduct = async(req,res,next)=>{
 }
 
 export const getAll = async(req,res,next)=>{
-    const {skip,limit}= pagination(req.query.page,req.query.limit)
+   // const {skip,limit}= pagination(req.query.page,req.query.limit)
 
-    const products = await productModel.find({status:"Active"}).select('name price mainImage').skip(skip).limit(limit)
+    const products = await productModel.find({status:"Active"}).select('name price mainImage')//.skip(skip).limit(limit)
     return res.status(200).json({message:"success",products})
 }
 
 export const getActive= async (req,res,next)=>{
   
-   const {skip,limit}= pagination(req.query.page,req.query.limit)
+   //const {skip,limit}= pagination(req.query.page,req.query.limit)
     let queryObj = {...req.query}
     const execQuery = ['page','limit','sort','search'] 
     execQuery.map((ele)=>{
@@ -69,7 +69,7 @@ export const getActive= async (req,res,next)=>{
         return next(new AppError("category not found!",404))
     }
   //return res.json(id)
-    const mongooseQuery =  productModel.find(queryObj).skip(skip).limit(limit).select('name price mainImage')
+    const mongooseQuery =  productModel.find(queryObj).select('name price mainImage')//.skip(skip).limit(limit)
     if(req.query.search){
     mongooseQuery.find({
         $or:[
@@ -78,7 +78,17 @@ export const getActive= async (req,res,next)=>{
         ]
     })
 }
-    const products= await mongooseQuery.sort(req.query.sort);
+    let products= await mongooseQuery.sort(req.query.sort);
+    
+   /* products = products.map(product=>{
+        return{
+            ...product.toObject(),
+            mainImage:product.mainImage.secure_url,
+            subImages:product.subImages.map(img=>{
+                img.secure_url
+            })
+        }
+    })*/
     return res.status(200).json({message:"success",products})
 }
 
