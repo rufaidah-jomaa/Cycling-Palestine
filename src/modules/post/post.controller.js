@@ -32,7 +32,7 @@ export const getDetailes = async (req, res) => {
       select: "userName",
     },{
     path: "comments",
-    select:'text userName userImage'
+    select:'text userName userImage user_id'
     },
 ])
   return res.status(200).json({ message: "success", post });
