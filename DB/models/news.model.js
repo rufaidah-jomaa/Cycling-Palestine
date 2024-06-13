@@ -8,6 +8,12 @@ const newsSchema= new Schema ({
         type:String,
         required:true
     },
+    images:[{
+        type:Object
+    }],
+    video: {
+        type:Object,  
+    },
     date:{
         type:Date,
         required:true  

@@ -12,7 +12,9 @@ export const addTrack= async(req,res,next)=>{
     if(!track){
         return next(new AppError("Track not created",500))
     }
-    const notification = await notificModel.create({content:"قام المسؤول باضافة رحلة جديدة يمكنك المشاركة بها الان!"})
+    const notification = await notificModel.create({
+        content: ` يمكنك المشاركة بها الان ،${req.body.trackName} قام المسؤول باضافة جولة جديدة  `
+    })
     return res.json({message:"success",track})
 }
 
@@ -31,7 +33,9 @@ export const updateTrack=async(req,res,next)=>{
    track.maxParticipants=req.body.maxParticipants;
    track.updatedBy=req.user._id;
    track.save()
-   const notification = await notificModel.create({content:` اطلع عليها اذا كنت مهتم بذلك${track.trackName}قام المسؤول بالتعديل على `})
+   const notification = await notificModel.create({
+     content: ` اطلع عليها اذا كنت مهتم بذلك ،${track.trackName} قام المسؤول بالتعديل على جولة  `
+   })
     return res.json({message:"success",track})
 }
 export const getTracks= async (req,res,next)=>{
@@ -122,8 +126,9 @@ export const deleteTrack=async(req,res,next)=>{
     if(!deletedTrack){
         return next(new AppError("track not found",404))
     }
-    const notification = await notificModel.create({content:"قام المسؤول بالغاء رحلة..تاكد من ذلك!"})
-
+    const notification = await notificModel.create({
+    content: ` تأكد من ذلك ، ${deleteTrack.trackName} قام المسؤول بإلغاء جولة   `
+    })
     return res.status(201).json({message:"success",deletedTrack})
 }
 

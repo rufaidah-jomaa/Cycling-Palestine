@@ -61,7 +61,7 @@ export const createPost = async(req, res, next) => {
     return next(new AppError("Couldn't create post",500));
   }
   const notification = await notificModel.create({
-    content: "قام المسؤول باضافة منشور جديد يمكنك التفاعل معه الان!",
+    content: ` يمكنك التفاعل معه الان ${title} قام المسؤول باضافة منشور جديد حول `
   });
 
   return res.json({ message: "success", post });
@@ -131,8 +131,7 @@ export const updatePost = async (req,res,next) => {
   post.mainImage = {secure_url,public_id}
   }
   req.body.images=[]
-  if(req.files.images){
-     
+  if(req.files.images){  
      async function deleteImages () {
          for (const element of product.subImages) {
              await cloudinary.uploader.destroy(element.public_id)    

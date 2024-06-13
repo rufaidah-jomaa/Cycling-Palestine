@@ -4,6 +4,7 @@ const dataMethods =['body', 'query', 'params','headers'];
 export const generalValidation={
     email: Joi.string().email().required(),
     password: Joi.string().pattern(/^[a-zA-Z0-9]{8,20}$/).required(),
+    id:Joi.string().hex().length(24).required(),
     image:Joi.object({
         fieldname:Joi.string().required(),
         originalname:Joi.string().required(),
@@ -12,9 +13,18 @@ export const generalValidation={
         destination:Joi.string().required(),
         filename:Joi.string().required(),
         path:Joi.string().required(),
-        size:Joi.number().max(1000000).required(),//1MB
+        size:Joi.number().max(5000000).required(),//1MB
 }),
-    id:Joi.string().hex().length(24).required()
+    video:Joi.object({
+        fieldname:Joi.string().required(),
+        originalname:Joi.string().required(),
+        encoding: Joi.string().required(),
+         mimetype: Joi.string().valid('video/mp4').required(),
+        destination: Joi.string().required(),
+        filename: Joi.string().required(),
+        path: Joi.string().required(),
+        size: Joi.number().max(1000000000).required(),//1000MB 1GB
+    })
 }
 const validation = (schema) => {
  
