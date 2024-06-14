@@ -176,8 +176,9 @@ export const deleteComment = async (req, res,next) => {
   if (req.user._id == comment.user_id) {
     await commentModel.findByIdAndDelete(req.params.id);
   }
-
+  if(comment.image){
   await cloudinary.uploader.destroy(comment.image.public_id);
+  }
   return res
     .status(200)
     .json({ message: "comment deleted successfully", comment });
