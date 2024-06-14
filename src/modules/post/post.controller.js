@@ -173,7 +173,7 @@ export const deleteComment = async (req, res,next) => {
     return next(new AppError("comment not found",404));
 
   }
-  if (req.user._id == comment.user_id) {
+  if (req.user._id.equals(comment.user_id)) {
     await commentModel.findByIdAndDelete(req.params.id);
   }
   if(comment.image){
