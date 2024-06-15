@@ -6,7 +6,7 @@ import validation from '../../middleware/validation.middleware.js';
 import * as schema from './cart.validation.js'
 const router = Router();
 
-router.get('/',controller.test)
+router.get('/',auth(endPoints.getFromCart),controller.getProductsFromCart)
 router.post('/create',validation(schema.addToCartSchema),auth(endPoints.create),controller.create)
 router.patch('/remove/:productId',validation(schema.remove),auth(endPoints.remove),controller.remove)
 router.patch('/clear',auth(endPoints.clear),controller.clear)

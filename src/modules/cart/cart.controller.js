@@ -1,8 +1,30 @@
 import cartModel from "../../../DB/models/Cart.model.js"
 import { AppError } from "../../services/AppError.js"
 
-export const test=(req,res)=>{
-    return res.json("Cart")
+export const getProductsFromCart=async(req,res,next)=>{
+    const cart = await cartModel.findOne({userId:req.user._id})
+    if(!cart || cart.products.length == 0){
+        return next(new AppError('cart is empty',403))
+    }
+    const products = cart.products
+    finalProductList=[]
+    for (let product of products){
+       
+        const checkProduct = await productModel.findOne({
+          _id:product.productId,
+          //stock:{$gte:product.quantity}
+        })
+          if(!checkProduct){
+              return next(new AppError('product not fount'),404)
+          }
+          product = product.toObject()
+          product.name=checkProduct.name //المعلومات تخزن جوا الداتابيس في المونجوز على شكل(Bson) .. Binary Json 
+          product.finalPrice=product.quantity*checkProduct.finalPrice
+          totalPrice+=product.finalPrice
+          finalProductsList.push(product)
+       }
+    const numberOfProducts = finalProductList.length();
+    return res.json(products)
 }
 export const create=async(req,res,next)=>{
     if(req.user.status =='Blocked'){
