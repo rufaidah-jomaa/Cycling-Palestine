@@ -1,4 +1,5 @@
 import cartModel from "../../../DB/models/Cart.model.js"
+import productModel from "../../../DB/models/Product.model.js"
 import { AppError } from "../../services/AppError.js"
 
 export const getProductsFromCart=async(req,res,next)=>{
@@ -6,10 +7,10 @@ export const getProductsFromCart=async(req,res,next)=>{
     if(!cart || cart.products.length == 0){
         return next(new AppError('cart is empty',403))
     }
-    const products = cart.products
-    finalProductList=[]
+    let products = cart.products
+    const finalProductsList=[]
+    let totalPrice=0
     for (let product of products){
-       
         const checkProduct = await productModel.findOne({
           _id:product.productId,
           //stock:{$gte:product.quantity}
@@ -19,12 +20,14 @@ export const getProductsFromCart=async(req,res,next)=>{
           }
           product = product.toObject()
           product.name=checkProduct.name //المعلومات تخزن جوا الداتابيس في المونجوز على شكل(Bson) .. Binary Json 
+          product.mainImage=checkProduct.mainImage
           product.finalPrice=product.quantity*checkProduct.finalPrice
-          totalPrice+=product.finalPrice
+          totalPrice += product.finalPrice
+          product.totalPrice=totalPrice
           finalProductsList.push(product)
        }
-    const numberOfProducts = finalProductList.length();
-    return res.json(products)
+    const numberOfProducts = finalProductsList.length;
+    return res.json({message:"success",numberOfProducts,finalProductsList})
 }
 export const create=async(req,res,next)=>{
     if(req.user.status =='Blocked'){
@@ -74,8 +77,8 @@ export const clear=async(req,res)=>{
 }
 
 export const updateQuantity=async(req,res)=>{
-    const {quantity,operator}=req.body;
-    const inc = (operator=="+")?quantity:-quantity;
+    const {quantity,operatorQ}=req.body;
+    const inc = (operatorQ === "+")?quantity:-quantity;
     const cart = await cartModel.findOneAndUpdate({userId:req.user._id, "products.productId":req.params.productId},
     {
         $inc:{

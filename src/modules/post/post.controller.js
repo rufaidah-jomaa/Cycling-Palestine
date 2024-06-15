@@ -7,7 +7,7 @@ import { pagination } from "../../services/pagination.js";
 
 export const getPosts = async (req, res, next) => {
   //const {skip,limit}=pagination(req.query.page,req.query.limit)
-  const posts = await postModel.find({}).select('title mainImage')/*.skip(skip).limit(limit)/*.populate([
+  const posts = await postModel.find({}).select('title mainImage description images')/*.skip(skip).limit(limit)/*.populate([
     {
       path: "user_id",
       select: "userName",
