@@ -56,7 +56,7 @@ export const addProductsExcel=async(req,res,next)=>{
        }
        product.slug = slugify(product.name,{lower:true})//lower case
        product.finalPrice = product.price - (product.price * (product.discount || 0) )
-       product.mainImage={secure_url:'cycling-logo.png'}
+       product.mainImage='cycling-logo.png'
        product.subImages=[{secure_url:'cycling-logo.png'},{secure_url:'cycling-logo.png'}]
        product.createdBy=req.user._id
        product.updatedBy=req.user._id
