@@ -9,6 +9,7 @@ export const asyncHandler=(func)=>{
 }
 export const globalErrorHandling=(err,req,res,next)=>{
     if(err){
-        return res.status(err.statusCode).json({message:err.message})
+        const statusCode = err.statusCode || 500;
+        return res.status(statusCode).json({message:err.message})
     }
 }

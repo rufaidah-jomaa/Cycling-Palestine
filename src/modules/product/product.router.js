@@ -15,6 +15,7 @@ router.post('/createProduct',auth(endPoints.createProduct),uploadFile(fileType.i
     {name:'mainImage',maxCount:1},
     {name:'subImages',maxCount:4}
 ]),validation(schema.createProductSchema),asyncHandler(controller.creatProduct))
+router.post('/createFromExcel',auth(endPoints.excel),uploadFile(fileType.excel).single('excel'),asyncHandler(controller.addProductsExcel))
 router.get('/getAll',asyncHandler(controller.getAll))
 router.get('/getActive',asyncHandler(controller.getActive))
 router.get('/getDetails/:id',validation(schema.getDetailsSchema),asyncHandler(controller.getDetails))

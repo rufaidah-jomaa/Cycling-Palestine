@@ -5,7 +5,7 @@ import productModel from "../../../DB/models/Product.model.js";
 import notificModel from "../../../DB/models/Notifications.model.js";
 import { pagination } from "../../services/pagination.js";
 import { AppError } from "../../services/AppError.js";
-
+import xlsx from 'xlsx'
 export const test=(req,res)=>{
     return res.json('product')
 }
@@ -41,6 +41,28 @@ export const creatProduct = async(req,res,next)=>{
     })
 
     return res.status(201).json({message:"product added successfully!",product})
+}
+export const addProductsExcel=async(req,res,next)=>{
+    const workbook =  xlsx.readFile(req.file.path)
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]]
+    const products = xlsx.utils.sheet_to_json(worksheet)
+    
+    const categories = await categoryModel.find({},'_id name')
+   
+    products.forEach(product=>{
+       const category = categories.find(cat=>cat.name === product.category_name)
+       if(category){
+        product.categoryId = category._id
+       }
+       product.slug = slugify(product.name,{lower:true})//lower case
+       product.finalPrice = product.price - (product.price * (product.discount || 0) )
+       product.mainImage={secure_url:'cycling-logo.png'}
+       product.subImages=[{secure_url:'cycling-logo.png'},{secure_url:'cycling-logo.png'}]
+       product.createdBy=req.user._id
+       product.updatedBy=req.user._id
+      })
+   await productModel.insertMany(products)
+    res.status(201).json({message:"success"})
 }
 
 export const getAll = async(req,res,next)=>{
@@ -86,9 +108,7 @@ export const getActive= async (req,res,next)=>{
         return{
             ...product.toObject(),
             mainImage:product.mainImage.secure_url,
-            subImages:product.subImages.map(img=>{
-                img.secure_url
-            })
+            subImages:product.subImages.map(img => img.secure_url)
         }
     })*/
     return res.status(200).json({message:"success",products})
