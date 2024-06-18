@@ -18,8 +18,8 @@ export const emailTemplate = (email,userName,token,refreshToken,subject)=>{
         `
     }
     if(subject =='Invoice'){
-        content=`<h1>!${userName},مرحباً</h1>
-       <p> We are happy that you purchased our product. We hope you like it, here is your invoice  </p>`
+        content=`
+       <p> نحن سعداء لشرائك  منتجاتنا، نأمل أن تنال إعجابك، إليك فاتورتك  </p>`
       }
     if(subject=='sendCode')
         {

@@ -94,7 +94,8 @@ export const create=async(req,res,next)=>{
     const file="invoice.pdf"
   createInvoice(invoice,file);
   const x=''
-   // sendEmail(user.email,"Purchase Invoice ",user.userName,x,"Invoice",true)
+  const y=''
+ sendEmail(user.email,"Purchase Invoice ",user.userName,x,y,"Invoice",true)
 
     for (const product of req.body.products) {
         await productModel.findOneAndUpdate({_id:product.productId},

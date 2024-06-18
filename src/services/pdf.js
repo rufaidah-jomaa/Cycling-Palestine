@@ -27,11 +27,11 @@ function generateHeader(doc) {
     .image("cycling-logo.png", 50, 45, { width: 50 })
     .fillColor("#444444")
     .fontSize(20)
-    .text("ACME Inc.", 110, 57)
+    .text("Cycling Palestine", 110, 57)
     .fontSize(10)
-    .text("ACME Inc.", 200, 50, { align: "right" })
-    .text("123 Main Street", 200, 65, { align: "right" })
-    .text("New York, NY, 10025", 200, 80, { align: "right" })
+    .text("Cycling palestine", 200, 50, { align: "right" })
+    .text("Ramallah", 200, 65, { align: "right" })
+    .text("Yarmouk Street", 200, 80, { align: "right" })
     .moveDown();
 }
 
@@ -105,12 +105,10 @@ function generateInvoiceTable(doc, invoice) {
   generateTableRow(
     doc,
     subtotalPosition,
-    "",
+    formatCurrency(invoice.subtotal*100),
     "",
     "Subtotal",
     "",
-    console.log( formatCurrency(invoice.subtotal*100)),
-    formatCurrency(invoice.subtotal*100)
   );
 
   doc.font("Helvetica");
@@ -121,9 +119,9 @@ function generateFooter(doc) {
     .fontSize(10)
     .font(fontPath)
     .text(
-      "يجب ان يتم الدفع عند الاستلام. نشكرك لمعاملتك معنا.",
+      "يجب ان يتم الدفع عند الاستلام. نشكرك لمعاملتك معنا.".split(" ").reverse().join(" "),
       50,
-      780,
+      700,
       { align: "center", width: 500 },
       {direction:"rtl"}
     );
@@ -133,7 +131,7 @@ function generateTableRow(
   doc,
   y,
   lineTotal,
-  description,
+ 
   unitCost,
   quantity,
   item // تم تغيير ترتيب العناصر
@@ -142,7 +140,6 @@ function generateTableRow(
   doc
     .fontSize(10)
     .text(reversedWords, 50, y, { direction: 'rtl' })
-    .text(description, 150, y)
     .text(quantity, 200, y, { width: 90, align: "right" })
     .text(unitCost, 300, y, { width: 90, align: "right" })
     .text(lineTotal, 450, y, { width: 90, align: "right" })
