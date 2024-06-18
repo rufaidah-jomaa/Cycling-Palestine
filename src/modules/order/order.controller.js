@@ -4,6 +4,9 @@ import orderModel from "../../../DB/models/Order.model.js"
 import productModel from "../../../DB/models/Product.model.js"
 import userModel from "../../../DB/models/User.model.js"
 import { AppError } from "../../services/AppError.js"
+import createInvoice from "../../services/pdf.js"
+
+import sendEmail from "../../services/sendEmail.js"
 
 export const getOrderTest=(req,res)=>{
     return res.json("hello from order")
@@ -69,12 +72,30 @@ export const create=async(req,res,next)=>{
  const order = await orderModel.create({
     userId:req.user._id,
     products:finalProductsList,
-    amount:(totalPrice - (totalPrice*((req.body.coupon?.discountPercentage || 0))/100)),
+    amount:totalPrice - (totalPrice*(req.body.coupon?.discountPercentage || 0)/100),
     address:req.body.address,
     phoneNumber:req.body.phone,
     updatedBy:req.user._id
  })
- if(order){
+ if (order) {
+ 
+    const invoice = {
+      shipping: {
+        name: user.userName,
+        address: order.address,
+        phone:order.phoneNumber
+      },
+      items: order.products,
+      subtotal: order.amount,
+      paid: 0,
+      invoice_nr: 1234,
+    };
+    
+    const file="invoice.pdf"
+  createInvoice(invoice,file);
+  const x=''
+   // sendEmail(user.email,"Purchase Invoice ",user.userName,x,"Invoice",true)
+
     for (const product of req.body.products) {
         await productModel.findOneAndUpdate({_id:product.productId},
             {$inc:{

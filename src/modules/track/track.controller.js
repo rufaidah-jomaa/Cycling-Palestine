@@ -40,10 +40,10 @@ export const updateTrack=async(req,res,next)=>{
 }
 export const getTracks= async (req,res,next)=>{
   //  const {skip,limit}= pagination(req.query.page,req.query.limit)
-    const tracks = await trackModel.find({})/*.skip(skip).limit(limit).populate({
+    const tracks = await trackModel.find({})/*.skip(skip).limit(limit)*/.populate({
         path:'participants',
         select:'name user_id'
-    })*/
+    })
     return res.json({message:"success",tracks})
 }
 

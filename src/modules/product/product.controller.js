@@ -55,9 +55,10 @@ export const addProductsExcel=async(req,res,next)=>{
         product.categoryId = category._id
        }
        product.slug = slugify(product.name,{lower:true})//lower case
-       product.finalPrice = product.price - (product.price * (product.discount || 0) )
-       product.mainImage='cycling-logo.png'
-       product.subImages=[{secure_url:'cycling-logo.png'},{secure_url:'cycling-logo.png'}]
+       product.finalPrice = product.price - (product.price * (product.discount || 0)/100 )
+      
+       product.mainImage={secure_url:'https://res.cloudinary.com/da7dzkgns/image/upload/v1718666353/Cycling%20Palestine/nsquwjihrwajm3pyzktg.png'}
+       product.subImages=[{secure_url:'https://res.cloudinary.com/da7dzkgns/image/upload/v1718666353/Cycling%20Palestine/nsquwjihrwajm3pyzktg.png'},{secure_url:'https://res.cloudinary.com/da7dzkgns/image/upload/v1718666353/Cycling%20Palestine/nsquwjihrwajm3pyzktg.png'}]
        product.createdBy=req.user._id
        product.updatedBy=req.user._id
       })
