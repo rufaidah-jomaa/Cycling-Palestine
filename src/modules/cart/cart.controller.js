@@ -13,10 +13,10 @@ export const getProductsFromCart=async(req,res,next)=>{
     for (let product of products){
         const checkProduct = await productModel.findOne({
           _id:product.productId,
-          //stock:{$gte:product.quantity}
+          stock:{$gte:product.quantity}
         })
           if(!checkProduct){
-              return next(new AppError('product not fount'),404)
+              return next(new AppError('product not found'),404)
           }
           product = product.toObject()
           product.name=checkProduct.name //المعلومات تخزن جوا الداتابيس في المونجوز على شكل(Bson) .. Binary Json 
