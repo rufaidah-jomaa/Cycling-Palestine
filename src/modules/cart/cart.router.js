@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/',auth(endPoints.getFromCart),controller.getProductsFromCart)
 router.post('/create',validation(schema.addToCartSchema),auth(endPoints.create),controller.create)
-router.patch('/remove/:productId',validation(schema.remove),auth(endPoints.remove),controller.remove)
+router.patch('/remove/:productId',validation(schema.removeItemSchema),auth(endPoints.remove),controller.remove)
 router.patch('/clear',auth(endPoints.clear),controller.clear)
 router.patch('/updateQ/:productId',validation(schema.updateQuantitySchema),auth(endPoints.quantity),controller.updateQuantity)
 export default router;
