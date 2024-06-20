@@ -34,9 +34,14 @@ export const create=async(req,res,next)=>{
         return next(new AppError('You are blocked.. you cant add products to cart',403))
     }
     const {productId} = req.body
+    const product = await productModel.findOne({_id:productId,stock:{$gte:1}})
+    if(!product){
+        return next(new AppError('product not found',404))
+    }
    
     const cart = await cartModel.findOne({userId:req.user._id})
     if(!cart){
+       
         const newCart = await cartModel.create({
             userId:req.user._id,
             products:{productId}

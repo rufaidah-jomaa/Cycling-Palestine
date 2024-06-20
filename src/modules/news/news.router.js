@@ -9,7 +9,7 @@ import uploadFile, { fileType } from '../../services/multer.js';
 const router = Router();
 
 router.post('/add',auth(endPoints.add),uploadFile(fileType.media).fields([
-    {name:"images",maxCount:5},
+    {name:"images",maxCount:10},
     {name:"video",maxCount:1}
 ]),validation(schema.addSchema),asyncHandler(controller.add))
 router.get('/',asyncHandler(controller.getNews))
