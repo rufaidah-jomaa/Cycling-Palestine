@@ -34,6 +34,7 @@ export const getallStatus = Joi.object({
 
 export const updateProductSchema=Joi.object({
     id:generalValidation.id,
+    status:Joi.string().valid('Active','notActive'),
     name:Joi.string().min(3),
     description:Joi.string(),
     stock:Joi.number().min(0).default(1),
