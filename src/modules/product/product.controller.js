@@ -202,5 +202,5 @@ export const destroy = async(req,res,next)=>{
         }
       }
       deleteSub()
-    return res.json({message:"category successfully deleted",product})
+    return res.json({message:"product successfully deleted",product})
 }
