@@ -153,6 +153,7 @@ export const update = async(req,res,next)=>{
  product.status = req.body.status
  product.price = (parseInt(req.body.price))
  product.discount=(parseInt(req.body.discount))
+ product.stock=(parseInt(req.body.stock))
  product.finalPrice=(product.price) - ((product.price * (product.discount || 0) ) / 100 )
  product.updatedBy=req.user._id
  if(req.files.mainImage){
