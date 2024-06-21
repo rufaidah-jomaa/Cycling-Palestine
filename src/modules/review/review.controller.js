@@ -2,6 +2,7 @@ import orderModel from "../../../DB/models/Order.model.js";
 import reviewModel from "../../../DB/models/review.model.js";
 import { AppError } from "../../services/AppError.js";
 
+
 export const create= async(req,res,next)=>{
     const {productId}=req.params;
     const{comment,rating}=req.body;
@@ -51,4 +52,11 @@ export const destroy= async(req,res,next)=>{
         return next(new AppError("review has not deleted",400))
     }
     return res.status(200).json({message:'success',review})
+}
+
+export const get= async(req,res,next)=>{
+    const {productId}=req.params
+    
+    const reviews= await reviewModel.find({ productId:productId})
+    return res.status(200).json({message:"success",reviews})
 }
