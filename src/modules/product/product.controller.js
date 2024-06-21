@@ -159,7 +159,6 @@ export const update = async(req,res,next)=>{
         return next(new AppError("This name already exists",409))
     }
  product.slug =slugify(req.body.name.toLowerCase())
- product.status = req.body.status
  product.price = (parseInt(req.body.price))
  product.discount=(parseInt(req.body.discount))
  product.stock=(parseInt(req.body.stock))
