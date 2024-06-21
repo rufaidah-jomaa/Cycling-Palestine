@@ -22,13 +22,12 @@ export const getProductsFromCart=async(req,res,next)=>{
           product.name=checkProduct.name //المعلومات تخزن جوا الداتابيس في المونجوز على شكل(Bson) .. Binary Json 
           product.mainImage=checkProduct.mainImage
           product.stock=checkProduct.stock
-          product.finalPrice=product.quantity*checkProduct.finalPrice
+          product.finalPrice = product.quantity * checkProduct.finalPrice
           totalPrice += product.finalPrice
-          product.totalPrice=totalPrice
           finalProductsList.push(product)
        }
     const numberOfProducts = finalProductsList.length;
-    return res.json({message:"success",numberOfProducts,finalProductsList})
+    return res.json({message:"success",numberOfProducts,finalProductsList,totalPrice})
 }
 export const create=async(req,res,next)=>{
     if(req.user.status =='Blocked'){
