@@ -57,6 +57,9 @@ export const destroy= async(req,res,next)=>{
 export const get= async(req,res,next)=>{
     const {productId}=req.params
     
-    const reviews= await reviewModel.find({ productId:productId})
+    const reviews= await reviewModel.find({ productId:productId}).populate({
+        path:'userId',
+        select:'userName image'
+    })
     return res.status(200).json({message:"success",reviews})
 }
