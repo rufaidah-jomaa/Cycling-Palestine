@@ -15,7 +15,7 @@ export const createProductSchema = Joi.object({
         destination:Joi.string().required(),
         filename:Joi.string().required(),
         path:Joi.string().required(),
-        size:Joi.number().max(1000000).required(),//1MB
+        size:Joi.number().max(5000000).required(),//1MB
     }).required(),
 
     subImages:Joi.array().items(
@@ -34,9 +34,8 @@ export const getallStatus = Joi.object({
 
 export const updateProductSchema=Joi.object({
     id:generalValidation.id,
-    status:Joi.string().valid('Active','notActive'),
     name:Joi.string().min(3),
-    description:Joi.string(),
+   description:Joi.string(),
     stock:Joi.number().min(0).default(1),
     price:Joi.number().min(1),
     discount:Joi.number().min(0).default(0),
