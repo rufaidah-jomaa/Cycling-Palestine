@@ -48,7 +48,7 @@ export const updateProductSchema=Joi.object({
         destination:Joi.string().required(),
         filename:Joi.string().required(),
         path:Joi.string().required(),
-        size:Joi.number().max(1000000).required(),//1MB
+        size:Joi.number().max(5000000).required(),//5MB
     }),
 
     subImages:Joi.array().items(
