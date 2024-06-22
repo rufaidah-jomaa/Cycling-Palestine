@@ -19,18 +19,7 @@ import { globalErrorHandling } from "./src/services/errorHandling.js";
 
 export const initApp = (app,express)=>{
      connectDB();
-     var whitelist = ['https://cyclingpalestine.netlify.app/']
-    var corsOptionsDelegate = function (req, callback) {
-    var corsOptions;
-    if (whitelist.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false } // disable CORS for this request
-  }
-  callback(null, corsOptions) // callback expects two parameters: error and options
-}
-     app.use(cors())
-     app.use(express.json()); //
+     app.use(express.json()); 
       app.get("/", (req, res) => {
       return res.status(200).json("welcome");
       });

@@ -17,7 +17,7 @@ export const getAll=async(req,res,next)=>{
     })
      return res.status(200).json({message:"success",coupons})
 }
-export const update= async(req,res)=>{
+export const update= async(req,res,next)=>{
     const coupon=await couponModel.findById(req.params.id)
     if(!coupon){
         return next(new AppError('coupon not found',404))
@@ -34,7 +34,7 @@ export const update= async(req,res)=>{
     return res.status(200).json({message:"coupon updated successfully",coupon})
 }
 
-export const destroy =async(req,res)=>{
+export const destroy =async(req,res,next)=>{
     const coupon=await couponModel.findByIdAndDelete(req.params.id)
     return res.status(200).json({message:"coupon deleted successfully",coupon})
 }
