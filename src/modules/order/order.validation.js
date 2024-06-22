@@ -2,7 +2,7 @@ import Joi from 'joi'
 import { generalValidation } from '../../middleware/validation.middleware.js'
 
 export const createOrderSchema = Joi.object({
-   // couponCode:,
+   couponCode:Joi.string().min(3),
    address:Joi.string(),
    phone:Joi.string()
 })

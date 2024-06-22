@@ -72,7 +72,8 @@ export const create=async(req,res,next)=>{
  const order = await orderModel.create({
     userId:req.user._id,
     products:finalProductsList,
-    amount:totalPrice - (totalPrice*(req.body.coupon?.discountPercentage || 0)/100),
+    amount:(totalPrice - (totalPrice*(req.body.coupon?.discountPercentage || 0)/100)),
+    
     address:req.body.address,
     phoneNumber:req.body.phone,
     updatedBy:req.user._id
