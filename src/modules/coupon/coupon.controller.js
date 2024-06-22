@@ -11,7 +11,7 @@ export const create = async(req,res,next)=>{
 }
 
 export const getAll=async(req,res,next)=>{
-     const coupons=await couponModel.find()
+     const coupons=await couponModel.find({expiredDate:{ $gte: new Date() }})
      return res.status(200).json({message:"success",coupons})
 }
 export const update= async(req,res)=>{

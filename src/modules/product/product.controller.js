@@ -98,7 +98,7 @@ export const getActive= async (req,res,next)=>{
     if(!checkcategory){
         return next(new AppError("category not found!",404))
     }*/
-    const mongooseQuery =  productModel.find(queryObj).select('name price mainImage')//.skip(skip).limit(limit)
+    const mongooseQuery =  productModel.find(queryObj).select('name price mainImage status')//.skip(skip).limit(limit)
     if(req.query.search){
     mongooseQuery.find({
         $or:[
