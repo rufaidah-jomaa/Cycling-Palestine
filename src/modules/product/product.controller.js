@@ -113,6 +113,8 @@ export const getActive= async (req,res,next)=>{
     })
 }
     let products= await mongooseQuery.sort(req.query.sort);
+       // تصفية المنتجات التي تحتوي على فئة نشطة فقط
+       products = products.filter(product => product.categoryId);
     
    /* products = products.map(product=>{
         return{
