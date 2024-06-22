@@ -94,15 +94,10 @@ export const getActive= async (req,res,next)=>{
     queryObj= JSON.stringify(queryObj)
     queryObj=queryObj.replace(/gt|gte|lt|lte|in|nin|eq/g,match=>`$${match}`)
     queryObj=JSON.parse(queryObj)
-    
-    //const {id} = queryObj.categoryId;//categoryId
-
-   
-    const checkcategory=await categoryModel.findById(queryObj.categoryId)
+   /* const checkcategory=await categoryModel.findById(queryObj.categoryId)
     if(!checkcategory){
         return next(new AppError("category not found!",404))
-    }
-  //return res.json(id)
+    }*/
     const mongooseQuery =  productModel.find(queryObj).select('name price mainImage')//.skip(skip).limit(limit)
     if(req.query.search){
     mongooseQuery.find({
