@@ -19,6 +19,7 @@ import { globalErrorHandling } from "./src/services/errorHandling.js";
 
 export const initApp = (app,express)=>{
      connectDB();
+     app.use(cors())
      app.use(express.json()); 
       app.get("/", (req, res) => {
       return res.status(200).json("welcome");
