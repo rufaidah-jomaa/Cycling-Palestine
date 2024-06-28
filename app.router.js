@@ -18,7 +18,7 @@ import { globalErrorHandling } from "./src/services/errorHandling.js";
 
 export const initApp = (app, express) => {
   connectDB();
-  var whitelist = ["https://cyclingpalestine.netlify.app"];
+  var whitelist = ["https://cyclingpalestine.netlify.app","http://localhost:5173"];
 
   app.use(
     cors({
