@@ -144,6 +144,17 @@ export const changeStatus = async(req,res,next)=>{
     if(!order){
         return next(new AppError("order not found",404))
     }
+    if (status === 'cancelled'){
+        const orderProducts = order.products; 
+    
+        for (const item of orderProducts) {
+          const product = await productModel.findById(item.productId);
+          if (product) {
+            product.stock += item.quantity;
+            await product.save();
+          }
+        }
+    }
     order.status=status;
     order.save();
     return res.status(200).json({message:'success',order})
