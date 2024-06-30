@@ -173,13 +173,11 @@ export const deleteComment = async (req, res,next) => {
     return next(new AppError("comment not found",404));
 
   }
-  if (req.user._id.equals(comment.user_id)) {
+  if (req.user._id.equals(comment.user_id) || req.user.role === 'Admin') {
     await commentModel.findByIdAndDelete(req.params.id);
   }
   if(comment.image){
   await cloudinary.uploader.destroy(comment.image.public_id);
   }
-  return res
-    .status(200)
-    .json({ message: "comment deleted successfully", comment });
+  return res.status(200).json({ message: "comment deleted successfully", comment });
 };
